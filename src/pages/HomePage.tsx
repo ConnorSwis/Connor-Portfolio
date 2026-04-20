@@ -151,7 +151,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
   return (
     <RetroFrame
       onJumpToSection={scrollToSection}
-      tickerText="WELCOME TO CONNOR'S PORTFOLIO :: FULL-STACK ENGINEERING, AUTOMATION, DATA PIPELINES, AND SELF-HOSTED SYSTEMS"
+      tickerText="WELCOME TO CONNOR'S SITE :: ENGINEERING, AUTOMATION, DATA PIPELINES, SELF-HOSTED SYSTEMS"
       visitorCount={visitorCount}
     >
       <ErrorBoundary
@@ -169,8 +169,8 @@ export function HomePage({ visitorCount }: HomePageProps) {
           <h1>Connor's Cyber Portfolio Terminal</h1>
           <p className="blink-text">THIS SITE IS ALWAYS UNDER CONSTRUCTION</p>
           <p>
-            Full-stack engineer building data pipelines, automation systems, and
-            intelligent developer tooling.
+            Full-stack engineer building data pipelines, automation tools, and
+            self-hosted systems.
           </p>
 
           <div className="hero-grid">
@@ -219,13 +219,13 @@ export function HomePage({ visitorCount }: HomePageProps) {
                 <tr>
                   <th scope="row">Current Focus</th>
                   <td>
-                    Automation, data pipelines, and scalable full-stack systems
+                    Automation, data pipelines, and full-stack systems
                   </td>
                 </tr>
                 <tr>
                   <th scope="row">Availability</th>
                   <td>
-                    Open to engineering internships, research, and builder roles
+                    Open to internships, research, and engineering roles
                   </td>
                 </tr>
               </tbody>
@@ -248,36 +248,39 @@ export function HomePage({ visitorCount }: HomePageProps) {
         <section className="retro-card timeline-card" id="timeline">
           <h2>Journey Timeline</h2>
           <p className="section-note">
-            A retro logbook of skills and how each one was learned.
+            How I picked up each skill along the way.
           </p>
           <ol className="timeline-list">
-            {journeyTimeline.map((entry, index) => (
+            {journeyTimeline.map((entry) => (
               <li
                 className="timeline-item"
                 key={`${entry.period}-${entry.title}`}
               >
-                <div className="timeline-period-bar">
-                  <p className="timeline-period">{entry.period}</p>
-                  <p className="timeline-phase">Phase {index + 1}</p>
-                </div>
-                <article className="timeline-entry">
-                  <h3>{entry.title}</h3>
-                  <p className="timeline-context">{entry.context}</p>
-                  <p className="timeline-label">Skills + how I learned them</p>
-                  <ul className="timeline-skill-list">
-                    {entry.skillJourney.map((skill) => (
-                      <li
-                        key={`${entry.period}-${entry.title}-${skill.skill}`}
-                        className="timeline-skill-item"
-                      >
-                        <p className="timeline-skill-name">{skill.skill}</p>
-                        <p className="timeline-skill-detail">
-                          {skill.learnedBy}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
+                <details className="timeline-details">
+                  <summary>
+                    <span className="timeline-period">{entry.period}</span>
+                    <h3>{entry.title}</h3>
+                  </summary>
+                  <div className="timeline-entry-body">
+                    <p className="timeline-context">{entry.context}</p>
+                    <p className="timeline-label">
+                      Skills + how I learned them
+                    </p>
+                    <ul className="timeline-skill-list">
+                      {entry.skillJourney.map((skill) => (
+                        <li
+                          key={`${entry.period}-${entry.title}-${skill.skill}`}
+                          className="timeline-skill-item"
+                        >
+                          <p className="timeline-skill-name">{skill.skill}</p>
+                          <p className="timeline-skill-detail">
+                            {skill.learnedBy}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
               </li>
             ))}
           </ol>
@@ -298,7 +301,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
         <section className="retro-card" id="projects">
           <h2>Project Hangar</h2>
           <p className="section-note">
-            Select a project below to enter the full dossier page.
+            Click a project to see the full breakdown.
           </p>
           <div className="retro-table-wrap">
             <table className="retro-data-table">

@@ -15,6 +15,11 @@ export type Project = {
   nextSteps: string[];
   repoUrl?: string;
   liveUrl?: string;
+  demoImage?: {
+    src: string;
+    alt: string;
+    caption?: string;
+  };
 };
 
 export type SkillGroup = {

@@ -16,7 +16,7 @@ export function RetroSidebar({ visitorCount, onJumpToSection }: RetroSidebarProp
       </RouteLink>
 
       <p className="retro-blurb">
-        Personal engineering site running in turbo 56k mode.
+        Personal site. Best viewed in turbo 56k mode.
       </p>
 
       {isHome && (

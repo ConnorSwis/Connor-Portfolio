@@ -11,111 +11,118 @@ export const projects: Project[] = [
   {
     slug: "rumble-chat-intelligence",
     title: "Rumble Chat Intelligence Pipeline",
-    tagline: "Real-time ingestion and analysis of livestream chat at scale.",
+    tagline: "Scraping and analyzing livestream chat in real time.",
     status: "Active Development",
     timeline: "2025–Present",
     signal: "cyan",
     summary:
-      "A real-time data pipeline that collects, processes, stores, and analyzes livestream chat messages to extract sentiment, trends, and user-level behavioral insights.",
+      "A pipeline that scrapes chat messages from livestreams, stores them in a database, and runs sentiment analysis to spot trends and track users over time.",
     problem:
-      "Livestream chat is high-volume, unstructured, and difficult to analyze in real time, especially when tracking message flow, user identity changes, and long-term trends.",
+      "Livestream chat moves fast and it's all unstructured text. Tracking what people are saying, who's saying it (even when they change usernames), and how sentiment shifts over time isn't something you can do manually.",
     architecture:
-      "Browser automation monitors active streams and ingests messages into an asynchronous processing pipeline. Messages are normalized, queued, enriched with user metadata, and stored in a database for downstream analysis and visualization.",
-    stack: [
-      "FastAPI",
-      "Playwright",
-      "PostgreSQL",
-      "Python",
-      "Redis",
-      "SQLAlchemy",
-    ],
+      "Playwright watches active streams and feeds messages into an async processing queue. Messages get normalized, tagged with user metadata, and stored in PostgreSQL for analysis and visualization.",
+    stack: ["FastAPI", "Playwright", "Python", "Redis", "SQLAlchemy"],
     highlights: [
-      "Built a continuous ingestion system for live chat message streams.",
-      "Tracked users across changing usernames and profile metadata.",
-      "Integrated sentiment scoring for downstream visualization and analysis.",
-      "Designed the system around asynchronous queues to support scale.",
+      "Continuously scrapes live chat from active streams.",
+      "Tracks users even when they change their username or profile.",
+      "Runs sentiment scoring on messages for visualization.",
+      "Uses async queues so it can handle high message volume.",
     ],
     nextSteps: [
-      "Scale the processing pipeline to millions of messages.",
-      "Add topic modeling, toxicity detection, and richer language analysis.",
-      "Build a historical dashboard for chat trends and activity exploration.",
+      "Scale to handle millions of messages.",
+      "Add topic modeling and toxicity detection.",
+      "Build a dashboard to explore chat trends over time.",
     ],
+    // demoImage: {
+    //   src: "/demos/rumble-frontend-demo.gif",
+    //   alt: "Rumble Chat Intelligence dashboard walkthrough",
+    //   caption: "Rumble chat monitor frontend demo.",
+    // },
+    liveUrl: "https://rumble.connorswis.com",
   },
   {
     slug: "social-media-intelligence-mapper",
     title: "Social Media Intelligence & Mapping System",
-    tagline:
-      "Automated ingestion and geographic mapping of public social media activity.",
+    tagline: "Automatically tracking and mapping public social media activity.",
     status: "Active Development",
     timeline: "2025–Present",
     signal: "amber",
     summary:
-      "A system for scraping, structuring, and analyzing public social media activity, with tools for mapping geographic patterns and relationships between accounts.",
+      "A system that scrapes public Instagram posts and account info, structures it into a Markdown knowledge base, and maps out geographic patterns and relationships between accounts.",
     problem:
-      "Public social media data is fragmented and unstructured, making it difficult to analyze activity patterns, identity changes, relationships, and location-based trends at scale.",
+      "Public social media data is scattered and messy. It's hard to spot patterns in activity, track accounts that change names, or see where things are happening geographically without building tools to do it.",
     architecture:
-      "Automated scraping pipelines ingest posts and account metadata, normalize entities such as users and locations, and store structured records for downstream analysis. Geographic and relationship layers make it possible to visualize regional patterns and account networks.",
+      "A FastAPI service orchestrates Apify scrapers that pull Instagram posts and profile metadata. Celery workers (with Redis as broker) run scheduled auto-updates, download media locally, and normalize records into versioned Markdown files via Jinja templates. Geographic and relationship layers sit on top for visualization.",
     stack: [
       "FastAPI",
-      "Playwright",
-      "PostgreSQL",
-      "Python",
+      "Celery",
       "Redis",
-      "Selenium",
+      "Apify",
+      "Python",
+      "Jinja2",
+      "Pydantic",
     ],
     highlights: [
-      "Built automated pipelines for collecting public social media data.",
-      "Normalized accounts across changing usernames and profile details.",
-      "Mapped activity geographically to identify location-based patterns.",
-      "Structured data for future network analysis and relationship visualization.",
+      "Automated pipelines that scrape public Instagram posts and profiles via Apify.",
+      "Scheduled auto-updates and profile caching keep accounts tracked even when usernames or profiles change.",
+      "Local media download and a versioned Markdown export pipeline produce a portable knowledge base.",
+      "Maps activity geographically and structures data for network/relationship analysis.",
     ],
     nextSteps: [
-      "Add community detection and account network analysis.",
-      "Integrate sentiment and topic modeling into the analysis layer.",
-      "Build interactive dashboards for exploring mapped activity.",
+      "Add community detection and network analysis.",
+      "Add sentiment and topic modeling.",
+      "Build interactive dashboards for exploring the data.",
     ],
+    demoImage: {
+      src: "/demos/social-media-intelligence-mapper-demo.gif",
+      alt: "Social Media Intelligence & Mapping System Demo",
+      caption: "The social media intelligence dashboard.",
+    },
+    liveUrl: "https://graph.connorswis.com",
   },
+
   {
     slug: "map-to-poster",
     title: "MapToPoster Generator",
-    tagline:
-      "Generate stylized city posters from geospatial data and custom rendering pipelines.",
+    tagline: "Turn any city's map data into a stylized poster.",
     status: "Active Build",
     timeline: "2025",
     signal: "amber",
     summary:
-      "A geospatial design tool that transforms OpenStreetMap data into stylized poster-quality visual outputs for cities and locations.",
+      "A tool that pulls OpenStreetMap data for a location and renders it into a styled, print-quality poster.",
     problem:
-      "Raw map data is technically rich but not directly suited for attractive visual presentation or print-ready designs.",
+      "Map data has tons of detail but it doesn't look good as-is. Turning raw street geometry into something you'd actually want to print and hang up takes a custom rendering pipeline.",
     architecture:
-      "The system pulls street and place geometry from geospatial sources, processes it through custom rendering logic, and outputs themed poster designs with consistent styling and layout control.",
+      "Pulls street and place geometry from OpenStreetMap, runs it through custom rendering logic, and outputs themed poster designs with consistent styling.",
     stack: ["FastAPI", "Flask", "Matplotlib", "OSMnx", "Python"],
     highlights: [
-      "Built a repeatable rendering pipeline for city poster generation.",
-      "Created custom themes and styling options for visual variety.",
-      "Generated high-resolution outputs suitable for print and display.",
-      "Combined engineering and design considerations in one tool.",
+      "Repeatable pipeline that generates posters for any city.",
+      "Multiple themes and color schemes to choose from.",
+      "Outputs high-res images that are print-ready.",
+      "Combines data processing with design in one tool.",
     ],
     nextSteps: [
-      "Add a browser-based UI for customization.",
-      "Support user-defined locations and theme presets.",
-      "Expand the export system for print-ready templates and layouts.",
+      "Add a web UI for customizing posters.",
+      "Let users pick any location and save theme presets.",
+      "Add more export options for different print sizes.",
     ],
+    liveUrl: "https://maptoposter.connorswis.com",
+    repoUrl: "https://github.com/ConnorSwis/maptoposter-docker",
   },
   {
     slug: "media-server-stack",
     title: "Self-Hosted Media Server Stack",
     tagline:
-      "Docker-based infrastructure for automated media acquisition, organization, and streaming.",
+      "Dockerized setup for automatically downloading, organizing, and streaming media.",
     status: "Operational",
     timeline: "2024–Present",
     signal: "cyan",
     summary:
-      "A self-hosted media platform running in Docker with automated services for downloading, organizing, indexing, and streaming media across a home-lab environment.",
+      "A self-hosted media server running in Docker that automatically finds, downloads, organizes, and streams movies, TV shows, and music across my home network.",
     problem:
-      "Managing media manually across multiple services is time-consuming, fragmented, and difficult to maintain without consistent infrastructure.",
+      "Managing media across a bunch of different services by hand is a pain. I wanted everything automated, from finding new releases to organizing files to streaming them.",
     architecture:
-      "The stack uses containerized services for media acquisition, indexing, download management, and streaming. Reverse proxies, storage mounts, and service orchestration create a stable internal platform for long-term operation.",
+      "A stack of containerized services handles media discovery, downloading, indexing, and streaming. Reverse proxies and storage mounts tie everything together into a single platform.",
     stack: [
       "Docker",
       "Docker Compose",
@@ -129,16 +136,128 @@ export const projects: Project[] = [
       "Sonarr",
     ],
     highlights: [
-      "Deployed and maintained a multi-service media stack in Docker.",
-      "Integrated acquisition, organization, and streaming into one platform.",
-      "Managed storage, networking, and service persistence across the stack.",
-      "Built practical experience with self-hosting and infrastructure operations.",
+      "Runs a full media stack with multiple services in Docker.",
+      "Automates the whole flow from finding media to streaming it.",
+      "Handles storage, networking, and persistent data across all services.",
+      "Gave me hands-on experience running production-style infrastructure.",
     ],
     nextSteps: [
-      "Improve observability and service health monitoring.",
-      "Harden remote access and backup workflows.",
-      "Expand automation for maintenance and lifecycle management.",
+      "Add better monitoring and health checks.",
+      "Set up proper backups and tighten remote access.",
+      "Automate more of the maintenance.",
     ],
+  },
+  {
+    slug: "home-lab-platform",
+    title: "Self-Hosted Home Lab Platform",
+    tagline:
+      "Raspberry Pi server with remote deployment, mesh networking, and public-facing services.",
+    status: "Operational",
+    timeline: "2024–Present",
+    signal: "cyan",
+    summary:
+      "My personal server built on a Raspberry Pi, running Docker containers, reverse-proxied services, and a mesh VPN for remote access from anywhere.",
+    problem:
+      "I wanted to host my own projects without paying for cloud hosting, and building the infrastructure myself teaches you way more about how systems actually work.",
+    architecture:
+      "Traffic comes in through my domain via Cloudflare, hits Nginx Proxy Manager for routing, and gets forwarded to Docker containers managed through Portainer. A mesh VPN lets me deploy and manage everything remotely.",
+    stack: [
+      "Cloudflare",
+      "Docker",
+      "Dynamic DNS",
+      "Linux",
+      "Nginx Proxy Manager",
+      "Portainer",
+      "Raspberry Pi",
+    ],
+    highlights: [
+      "Runs a full container platform on a Raspberry Pi.",
+      "Routes my domain through Cloudflare and Nginx Proxy Manager.",
+      "Set up cloud storage, file transfer, and remote access.",
+      "Built a mesh VPN for managing everything remotely.",
+      "Hosts multiple live projects.",
+    ],
+    nextSteps: [
+      "Add monitoring and alerts.",
+      "Automate backups.",
+      "Add more hardware to expand capacity.",
+    ],
+  },
+  {
+    slug: "discord-casino-bot",
+    title: "Discord Casino Bot",
+    tagline:
+      "A casino bot with animated graphics, all rendered in Python and played inside Discord.",
+    status: "Archived",
+    timeline: "2019–2020",
+    signal: "green",
+    summary:
+      "A Discord bot featuring an animated slot machine, a graphical blackjack table with hand-drawn card assets, and a persistent virtual currency system, all rendered programmatically in Python.",
+    problem:
+      "Discord bots at the time were all text-based. I wanted to build something visual, animated games with real graphics, which meant generating and compositing images on the fly.",
+    architecture:
+      "Runs on discord.py with async event handling. Game state is tracked per-user with persistence. Graphics are rendered using Pillow, compositing card images and UI elements into animated frames sent as Discord attachments.",
+    stack: ["Python", "discord.py", "Pillow", "asyncio", "SQLite"],
+    highlights: [
+      "Animated slot machine rendered frame by frame.",
+      "Graphical blackjack table with hand-drawn card art.",
+      "Persistent virtual currency system across all users.",
+      "Got 75 stars on GitHub.",
+    ],
+    nextSteps: ["Archived, no further development planned."],
+  },
+  {
+    slug: "qr-code-generator",
+    title: "Client-Side QR Code Generator",
+    tagline:
+      "QR code generator that runs entirely in the browser, no server, no tracking.",
+    status: "Deployed",
+    timeline: "2025",
+    signal: "cyan",
+    summary:
+      "A simple web app that generates QR codes completely client-side. Your data never leaves your browser.",
+    problem:
+      "Most QR code generators online send your input to a server. That's unnecessary and a privacy concern, especially for sensitive content.",
+    architecture:
+      "Everything runs in the browser using JavaScript. Input gets encoded locally and the QR code is rendered to a canvas element for download.",
+    stack: ["HTML", "CSS", "JavaScript", "Canvas API"],
+    highlights: [
+      "No server calls, everything happens in the browser.",
+      "Supports different content types and sizes.",
+      "Hosted on my Raspberry Pi server.",
+    ],
+    nextSteps: [
+      "Add batch generation from CSV input.",
+      "Support custom styling and branding on generated codes.",
+    ],
+    liveUrl: "https://qr-code.connorswis.com",
+  },
+  {
+    slug: "spreadsheet-sms-sender",
+    title: "Spreadsheet SMS Sender",
+    tagline:
+      "Send personalized texts to a list of contacts from a spreadsheet.",
+    status: "Deployed",
+    timeline: "2025",
+    signal: "cyan",
+    summary:
+      "A web app that reads contacts from a spreadsheet and sends each person a personalized text message. Built for organizations running campaigns or reminders.",
+    problem:
+      "Sending individual texts to a big list of contacts by hand is tedious and error-prone. This automates it.",
+    architecture:
+      "The frontend lets you upload a spreadsheet and preview templated messages with per-row variables. The backend processes the data and sends messages through an SMS API.",
+    stack: ["Python", "FastAPI", "JavaScript", "HTML/CSS"],
+    highlights: [
+      "Parses CSV and Excel spreadsheets.",
+      "Supports message templates with per-row variables.",
+      "Previews messages before sending.",
+      "Hosted on my Raspberry Pi server.",
+    ],
+    nextSteps: [
+      "Add scheduling for delayed message sends.",
+      "Support delivery status tracking and reporting.",
+    ],
+    liveUrl: "https://sms.connorswis.com",
   },
 ];
 
@@ -219,12 +338,12 @@ export const journeyTimeline: TimelineEntry[] = [
       {
         skill: "Operating systems and hardware",
         learnedBy:
-          "Explored system internals to maintain a believable baiting environment.",
+          "Had to understand system internals to make the VM look real.",
       },
       {
         skill: "Social engineering",
         learnedBy:
-          "Interacted with scammers to understand their tactics and psychology.",
+          "Spent hours talking to scammers, learning how they operate.",
       },
     ],
   },
@@ -236,21 +355,20 @@ export const journeyTimeline: TimelineEntry[] = [
     skillJourney: [
       {
         skill: "Metasploit",
-        learnedBy:
-          "Used modules to understand exploit flow and post-exploitation basics.",
+        learnedBy: "Ran exploits and learned the basics of post-exploitation.",
       },
       {
         skill: "Netcat and reverse shells",
         learnedBy:
-          "Practiced listener/client setups to understand remote shell mechanics.",
+          "Set up listeners and reverse shells to see how remote access works.",
       },
       {
         skill: "John the Ripper",
-        learnedBy: "Ran password-cracking exercises on test data and hashes.",
+        learnedBy: "Cracked test passwords and hashes.",
       },
       {
         skill: "TOR Browser",
-        learnedBy: "Exploring anonymous browsing and the dark web.",
+        learnedBy: "Explored anonymous browsing and the dark web.",
       },
     ],
   },
@@ -262,23 +380,20 @@ export const journeyTimeline: TimelineEntry[] = [
     skillJourney: [
       {
         skill: "SSH operations",
-        learnedBy:
-          "Managed remote sessions, keys, and command-line administration.",
+        learnedBy: "Managed the Pi remotely over SSH.",
       },
       {
         skill: "FileZilla and FTP",
-        learnedBy:
-          "Moved files between hosts and compared transfer protocols in practice.",
+        learnedBy: "Transferred files between machines using FTP.",
       },
       {
         skill: "Network configuration",
         learnedBy:
-          "Set static addresses, tuned router settings, and debugged connectivity.",
+          "Configured static IPs, router settings, and fixed network issues.",
       },
       {
         skill: "Port forwarding",
-        learnedBy:
-          "Opened and tested external service access from home infrastructure.",
+        learnedBy: "Set up port forwarding to expose services from home.",
       },
     ],
   },
@@ -290,22 +405,21 @@ export const journeyTimeline: TimelineEntry[] = [
     skillJourney: [
       {
         skill: "API development",
-        learnedBy:
-          "Created API endpoints as an interface for my python projects.",
+        learnedBy: "Built API endpoints for my Python projects.",
       },
       {
         skill: "Bot architecture",
         learnedBy:
-          "Designed commands, event handlers, and persistence for Discord bots.",
+          "Built Discord bots with commands, event handlers, and persistent data.",
       },
       {
         skill: "Programmatic graphics",
         learnedBy:
-          "Built a casino bot with custom slot and blackjack visuals rendered with code.",
+          "Made a casino bot with hand-drawn slot machine and blackjack graphics rendered in code.",
       },
       {
         skill: "Python development",
-        learnedBy: "Built production-style scripts and bot features.",
+        learnedBy: "Wrote scripts and bot features that actually got used.",
       },
     ],
   },
@@ -313,26 +427,25 @@ export const journeyTimeline: TimelineEntry[] = [
     period: "2020-2021",
     title: "Sophomore Year: Web Stack Expansion",
     context:
-      "I moved into full-stack development which explanded my skill set from just backend. And I was in Computer Science A learning Java.",
+      "I moved into full-stack development and started building frontends, not just backends. Also took AP Computer Science A and learned Java.",
     skillJourney: [
       {
         skill: "FastAPI and Jinja",
-        learnedBy: "Served dynamic endpoints and template-rendered pages.",
+        learnedBy: "Built dynamic pages with FastAPI and Jinja templates.",
       },
       {
         skill: "HTML, CSS, and JavaScript",
         learnedBy:
-          "Hand-written frontend interfaces tied directly to backend routes.",
+          "Wrote HTML, CSS, and JavaScript by hand, wired up to backend routes.",
       },
       {
         skill: "HTMX",
         learnedBy:
-          "HTML that is generated server-side but has client-side interactivity without a full SPA framework.",
+          "Used HTMX for interactive pages without needing a full frontend framework.",
       },
       {
         skill: "Java and OOP fundamentals",
-        learnedBy:
-          "Applied class design and core algorithms through AP CSA coursework.",
+        learnedBy: "Learned OOP and algorithms through AP CSA.",
       },
     ],
   },
@@ -345,22 +458,22 @@ export const journeyTimeline: TimelineEntry[] = [
       {
         skill: "SEO optimization",
         learnedBy:
-          "Reworked structure and metadata to improve discovery and traffic quality.",
+          "Restructured the site and fixed metadata to improve search rankings.",
       },
       {
         skill: "WordPress operations",
         learnedBy:
-          "Restructured pages, navigation, and content ownership for maintainability.",
+          "Reorganized pages and navigation so the team could maintain it themselves.",
       },
       {
         skill: "Mailchimp and GoDaddy workflows",
         learnedBy:
-          "Integrated campaign and hosting workflows with existing business processes.",
+          "Got their email campaigns and hosting set up to work with their existing workflow.",
       },
       {
         skill: "Client delivery",
         learnedBy:
-          "Shipped a month-long scoped engagement with stakeholder communication.",
+          "Managed the project over a month, communicating with stakeholders throughout.",
       },
     ],
   },
@@ -373,17 +486,16 @@ export const journeyTimeline: TimelineEntry[] = [
       {
         skill: "Cisco Packet Tracer",
         learnedBy:
-          "Built and validated simulated network topologies and routing paths.",
+          "Built and tested network topologies and routing in simulations.",
       },
       {
         skill: "Network troubleshooting",
-        learnedBy:
-          "Diagnosed failures in addressing, routing, and service connectivity.",
+        learnedBy: "Debugged network issues.",
       },
       {
         skill: "Security design",
         learnedBy:
-          "Mapped threat scenarios to practical hardening and monitoring choices.",
+          "Learned to think about threats and apply practical security hardening.",
       },
     ],
   },
@@ -395,23 +507,22 @@ export const journeyTimeline: TimelineEntry[] = [
     skillJourney: [
       {
         skill: "React and TypeScript",
-        learnedBy:
-          "Built interactive frontend interfaces with typed components and state management.",
+        learnedBy: "Built frontend apps with typed React components.",
       },
       {
         skill: "Docker",
         learnedBy:
-          "Containerized services and built repeatable deployment workflows for projects and experiments.",
+          "Containerized my projects and set up repeatable deployment workflows.",
       },
       {
         skill: "Remix, Next.js, Vite, and Bun",
         learnedBy:
-          "Explored modern full-stack frameworks to understand their tradeoffs and capabilities.",
+          "Tried out different frameworks to see what worked best for different use cases.",
       },
       {
         skill: "Serverless, edge, and service workers",
         learnedBy:
-          "Deployed projects to serverless platforms with Vercel. Learned about edge computing and client-side service workers for offline and background processing.",
+          "Deployed to Vercel, learned about edge computing and service workers.",
       },
     ],
   },
@@ -422,23 +533,21 @@ export const journeyTimeline: TimelineEntry[] = [
       "I started as a woodworking specialist, then was promoted to oversee technology and business-side systems.",
     skillJourney: [
       {
-        skill: "A/V systems operations",
-        learnedBy: "Managed audio/video equipment setup and usage.",
+        skill: "A/V systems",
+        learnedBy: "Set up and managed all the audio/video equipment.",
       },
       {
         skill: "Business communications",
-        learnedBy:
-          "Worked with external representatives on behalf of the camp.",
+        learnedBy: "Talked to vendors and reps on behalf of the camp.",
       },
       {
         skill: "Digital records management",
         learnedBy:
-          "Organized operational data for faster retrieval and cleaner workflows.",
+          "Organized digital records so things were actually findable.",
       },
       {
-        skill: "Technology cost optimization",
-        learnedBy:
-          "Audited tooling choices and reduced recurring expenses across camp systems.",
+        skill: "Technology cost reduction",
+        learnedBy: "Found ways to cut tech costs across the camp.",
       },
     ],
   },
@@ -474,7 +583,7 @@ export const journeyTimeline: TimelineEntry[] = [
       {
         skill: "Remote networking stack",
         learnedBy:
-          "Built cloud storage, P2P file transfer, remote access, virtual private mesh networking, and dynamic DNS workflows.",
+          "Set up cloud storage, P2P file transfer, remote access, a mesh VPN, and dynamic DNS.",
       },
       {
         skill: "Self-hosted container platform",
@@ -491,14 +600,14 @@ export const education: EducationEntry[] = [
     program: "B.S. in Mathematics (Concentration in Computer Science)",
     period: "2023 - Present",
     details:
-      "Studying mathematics with a computer science concentration. I have learned Discrete Mathematics, Linear Algebra, Multivariable Calculus, Differential Equations, and Analysis. I have also taken courses in Data Structures, System Level Programming, and Computer Architecture.",
+      "Studying math with a CS concentration. Coursework includes Discrete Math, Linear Algebra, Multivariable Calc, Differential Equations, Analysis, Data Structures, Systems Programming, and Computer Architecture.",
   },
   {
     school: "Independent Projects",
     program: "Practical Systems Development",
     period: "Ongoing",
     details:
-      "Built real-world software systems involving scraping, automation, full-stack web development, infrastructure, data pipelines, and geospatial visualization.",
+      "Building software across scraping, automation, full-stack web dev, infrastructure, data pipelines, and geospatial visualization.",
   },
 ];
 

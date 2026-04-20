@@ -15,6 +15,7 @@ export function RumbleMonitorPage({
   project,
   visitorCount,
 }: RumbleMonitorPageProps) {
+  const hasDemoImage = Boolean(project.demoImage?.src);
   const relatedProjects = useMemo(
     () => projects.filter((item) => item.slug !== project.slug).slice(0, 2),
     [project.slug],
@@ -89,26 +90,28 @@ export function RumbleMonitorPage({
         </section>
       </ErrorBoundary>
 
-      <ErrorBoundary
-        fallback={
-          <SectionFallback
-            className="retro-card"
-            message="Frontend demo preview failed to load."
-            title="Frontend Demo"
-          />
-        }
-        name="RumbleFrontendDemo"
-      >
-        <section className="retro-card">
-          <h2>Frontend Demo</h2>
-          <figure className="rumble-demo-frame">
-            <img
-              alt="Rumble monitor frontend walkthrough"
-              src="/rumble-frontend-demo.gif"
+      {hasDemoImage && (
+        <ErrorBoundary
+          fallback={
+            <SectionFallback
+              className="retro-card"
+              message="Frontend demo preview failed to load."
+              title="Frontend Demo"
             />
-          </figure>
-        </section>
-      </ErrorBoundary>
+          }
+          name="RumbleFrontendDemo"
+        >
+          <section className="retro-card">
+            <h2>Frontend Demo</h2>
+            <figure className="rumble-demo-frame">
+              <img
+                alt={project.demoImage?.alt || "Rumble monitor frontend walkthrough"}
+                src={project.demoImage?.src}
+              />
+            </figure>
+          </section>
+        </ErrorBoundary>
+      )}
 
       <ErrorBoundary
         fallback={
