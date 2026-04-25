@@ -12,6 +12,13 @@ type ProjectPageProps = {
 };
 
 export function ProjectPage({ project, visitorCount }: ProjectPageProps) {
+  const extendedContent = project.extendedContent;
+  const hasPipelineSummary = Boolean(extendedContent?.pipelineSummary?.length);
+  const hasComponentGroups = Boolean(extendedContent?.componentGroups?.length);
+  const hasFlows = Boolean(extendedContent?.flows?.length);
+  const hasApiSurface = Boolean(extendedContent?.apiSurface?.length);
+  const hasDeploymentNotes = Boolean(extendedContent?.deploymentNotes?.length);
+
   const relatedProjects = useMemo(
     () => projects.filter((item) => item.slug !== project.slug).slice(0, 3),
     [project.slug],
@@ -99,6 +106,24 @@ export function ProjectPage({ project, visitorCount }: ProjectPageProps) {
           <p>{project.summary}</p>
         </section>
 
+        {extendedContent?.overview && (
+          <section className="retro-card project-summary-card">
+            <h2>System Overview</h2>
+            <p>{extendedContent.overview}</p>
+          </section>
+        )}
+
+        {hasPipelineSummary && (
+          <section className="retro-card project-highlights-card">
+            <h2>Pipeline Summary</h2>
+            <ol className="roadmap-list">
+              {extendedContent?.pipelineSummary?.map((step) => (
+                <li key={`${project.slug}-pipeline-${step}`}>{step}</li>
+              ))}
+            </ol>
+          </section>
+        )}
+
         {project.demoImage && (
           <section className="retro-card project-demo-card">
             <h2>Demo</h2>
@@ -114,6 +139,88 @@ export function ProjectPage({ project, visitorCount }: ProjectPageProps) {
                 </figcaption>
               )}
             </figure>
+          </section>
+        )}
+
+        {extendedContent?.architectureDiagram && (
+          <section className="retro-card">
+            <h2>System Architecture</h2>
+            <pre className="architecture-diagram">
+              {extendedContent.architectureDiagram}
+            </pre>
+          </section>
+        )}
+
+        {hasComponentGroups && (
+          <section className="retro-card detail-grid">
+            {extendedContent?.componentGroups?.map((group) => (
+              <article key={`${project.slug}-components-${group.title}`}>
+                <h2>{group.title}</h2>
+                <ul>
+                  {group.items.map((item) => (
+                    <li key={`${project.slug}-${group.title}-${item}`}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </section>
+        )}
+
+        {hasFlows && (
+          <section className="retro-card">
+            <h2>End-to-End Flows</h2>
+            <div className="education-grid">
+              {extendedContent?.flows?.map((flow) => (
+                <article
+                  className="education-item"
+                  key={`${project.slug}-flow-${flow.title}`}
+                >
+                  <h3>{flow.title}</h3>
+                  <ol>
+                    {flow.steps.map((step) => (
+                      <li key={`${project.slug}-${flow.title}-${step}`}>{step}</li>
+                    ))}
+                  </ol>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {hasApiSurface && (
+          <section className="retro-card">
+            <h2>Frontend API Surface</h2>
+            <div className="retro-table-wrap">
+              <table className="retro-data-table project-api-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Endpoint</th>
+                    <th scope="col">Purpose</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {extendedContent?.apiSurface?.map((entry) => (
+                    <tr key={`${project.slug}-api-${entry.endpoint}`}>
+                      <td>
+                        <code>{entry.endpoint}</code>
+                      </td>
+                      <td>{entry.purpose}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
+        {hasDeploymentNotes && (
+          <section className="retro-card project-roadmap-card">
+            <h2>Deployment + Practical Notes</h2>
+            <ul>
+              {extendedContent?.deploymentNotes?.map((note) => (
+                <li key={`${project.slug}-deploy-${note}`}>{note}</li>
+              ))}
+            </ul>
           </section>
         )}
 

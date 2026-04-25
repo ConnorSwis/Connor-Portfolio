@@ -362,6 +362,10 @@
   background: #e8ffde;
 }
 
+.signal-slate {
+  background: #eceff3;
+}
+
 .retro-link,
 .link-outpost a {
   color: #0016b4;
@@ -372,6 +376,56 @@
 .retro-link:hover,
 .link-outpost a:hover {
   color: #b50000;
+}
+
+.hangar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.hangar-badge {
+  display: inline-block;
+  padding: 0.14rem 0.42rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-top: 2px solid #f8f8f8;
+  border-left: 2px solid #f8f8f8;
+  border-right: 2px solid #4a4a4a;
+  border-bottom: 2px solid #4a4a4a;
+  box-shadow: inset -1px -1px 0 #7d7d7d;
+}
+
+.hangar-badge--demo {
+  background: #ffe56f;
+  color: #332200;
+}
+
+.hangar-badge--demo:hover {
+  background: #fff09b;
+  color: #332200;
+}
+
+.hangar-badge--repo {
+  background: #cde6ff;
+  color: #002e80;
+}
+
+.hangar-badge--repo:hover {
+  background: #dff0ff;
+  color: #002e80;
+}
+
+.hangar-link-muted {
+  color: #676767;
+  font-size: 0.78rem;
+  font-family: "Courier New", Courier, monospace;
+  letter-spacing: 0.03em;
 }
 
 .timeline-card {
@@ -416,7 +470,9 @@
 .timeline-item::before {
   content: "";
   position: absolute;
-  left: calc(var(--rail-left) + var(--rail-width) / 2 - 5px - var(--pad-left) - 2px);
+  left: calc(
+    var(--rail-left) + var(--rail-width) / 2 - 5px - var(--pad-left) - 2px
+  );
   top: 0.5rem;
   width: 10px;
   height: 10px;
@@ -702,6 +758,10 @@
   background: linear-gradient(90deg, #22c55e, #16a34a, #22c55e);
 }
 
+.project-hero.signal-slate::before {
+  background: linear-gradient(90deg, #64748b, #475569, #64748b);
+}
+
 .project-hero-header {
   display: flex;
   align-items: center;
@@ -736,9 +796,19 @@
   box-shadow: 0 0 6px #22c55e80;
 }
 
+.signal-dot--slate {
+  background: #64748b;
+  box-shadow: 0 0 6px #64748b80;
+}
+
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .project-tagline {
@@ -794,6 +864,11 @@
 .meta-chip-signal--green {
   background: #d4ffd0;
   color: #1a6b1a;
+}
+
+.meta-chip-signal--slate {
+  background: #e2e8f0;
+  color: #334155;
 }
 
 /* ── Project buttons ── */
@@ -950,10 +1025,12 @@
   font-size: 0.87rem;
 }
 
+.project-api-table td,
 .rumble-api-table td {
   line-height: 1.35;
 }
 
+.project-api-table code,
 .rumble-api-table code {
   color: #001f80;
   font-family: "Courier New", Courier, monospace;

@@ -218,15 +218,11 @@ export function HomePage({ visitorCount }: HomePageProps) {
                 </tr>
                 <tr>
                   <th scope="row">Current Focus</th>
-                  <td>
-                    Automation, data pipelines, and full-stack systems
-                  </td>
+                  <td>Automation, data pipelines, and full-stack systems</td>
                 </tr>
                 <tr>
                   <th scope="row">Availability</th>
-                  <td>
-                    Open to internships, research, and engineering roles
-                  </td>
+                  <td>Open to internships, research, and engineering roles</td>
                 </tr>
               </tbody>
             </table>
@@ -311,6 +307,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
                   <th scope="col">Status</th>
                   <th scope="col">Timeline</th>
                   <th scope="col">Focus</th>
+                  <th scope="col">Links</th>
                   <th scope="col">Open</th>
                 </tr>
               </thead>
@@ -323,6 +320,37 @@ export function HomePage({ visitorCount }: HomePageProps) {
                     <td>{project.status}</td>
                     <td>{project.timeline}</td>
                     <td>{project.tagline}</td>
+                    <td>
+                      <div
+                        className="hangar-links"
+                        role="group"
+                        aria-label="Project links"
+                      >
+                        {project.liveUrl ? (
+                          <a
+                            className="hangar-badge hangar-badge--demo"
+                            href={project.liveUrl}
+                            rel="noreferrer noopener"
+                            target="_blank"
+                          >
+                            DEMO
+                          </a>
+                        ) : null}
+                        {project.repoUrl && (
+                          <a
+                            className="hangar-badge hangar-badge--repo"
+                            href={project.repoUrl}
+                            rel="noreferrer noopener"
+                            target="_blank"
+                          >
+                            REPO
+                          </a>
+                        )}
+                        {!project.liveUrl && !project.repoUrl && (
+                          <span className="hangar-link-muted">N/A</span>
+                        )}
+                      </div>
+                    </td>
                     <td>
                       <RouteLink
                         className="retro-link"

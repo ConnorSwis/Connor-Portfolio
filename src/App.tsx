@@ -5,7 +5,6 @@ import { useVisitorCounter } from "./hooks/useVisitorCounter";
 import { HomePage } from "./pages/HomePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { ProjectPage } from "./pages/ProjectPage";
-import { RumbleMonitorPage } from "./pages/RumbleMonitorPage";
 import { projects } from "./server/portfolioData";
 
 function App() {
@@ -35,18 +34,6 @@ function App() {
 
     if (!project) {
       return <NotFoundPage visitorCount={visitorCount} />;
-    }
-
-    if (project.slug === "rumble-chat-intelligence") {
-      return (
-        <ErrorBoundary
-          fallback={routeFallback}
-          name="RumbleRoute"
-          resetKey={route}
-        >
-          <RumbleMonitorPage project={project} visitorCount={visitorCount} />
-        </ErrorBoundary>
-      );
     }
 
     return (

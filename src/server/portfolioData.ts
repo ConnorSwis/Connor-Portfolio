@@ -7,6 +7,13 @@ import type {
   TimelineEntry,
 } from "../types/portfolio";
 
+export const signalLabels: Record<ProjectSignal, string> = {
+  cyan: "STABLE",
+  amber: "ACTIVE",
+  green: "EXPLORATION",
+  slate: "UNMAINTAINED",
+};
+
 export const projects: Project[] = [
   {
     slug: "rumble-chat-intelligence",
@@ -14,9 +21,181 @@ export const projects: Project[] = [
     tagline: "Scraping and analyzing livestream chat in real time.",
     status: "Active Development",
     timeline: "2025–Present",
-    signal: "cyan",
+    signal: "amber",
     summary:
       "A pipeline that scrapes chat messages from livestreams, stores them in a database, and runs sentiment analysis to spot trends and track users over time.",
+    extendedContent: {
+      overview:
+        "This system continuously monitors selected Rumble channels, detects live broadcasts, ingests chat + viewer telemetry, and serves live analytics to a polling React dashboard.",
+      pipelineSummary: [
+        "Detect live streams on monitored channels.",
+        "Scrape stream metadata, chat messages, donations, badges, and viewer counts.",
+        "Persist normalized entities into relational tables.",
+        "Serve analytics and stream APIs via FastAPI.",
+        "Render live + historical dashboards in React.",
+      ],
+      architectureDiagram: `Rumble channel pages
+        |
+        v
+Playwright scraper (channel monitor + per-stream watchers)
+        |
+        v
+In-memory async queue (ExtractedMessage)
+        |
+        v
+Consumer (batch upserts users/messages/badges/subscriptions/history)
+        |
+        v
+Database (SQLite/Postgres via SQLAlchemy)
+        |
+        +------------------------------+
+        |                              |
+        v                              v
+FastAPI REST endpoints         Badge image store (/api/badge-images)
+        |
+        v
+React dashboard (MainDashboard + analytics/chart views)`,
+      componentGroups: [
+        {
+          title: "Backend Technologies",
+          items: [
+            "FastAPI + Uvicorn power the API server, lifecycle hooks, middleware, and routing.",
+            "Playwright (Chromium) + asyncio run channel polling and per-stream live chat/viewership scraping.",
+            "SQLAlchemy 2 (async) + Pydantic v2 handle ORM models, query layers, and request/response schemas.",
+            "Ingestion uses an asyncio.Queue with batched upserts for users, messages, badges, and subscriptions.",
+            "API response optimization uses an in-process TTL cache and persisted historical analytics snapshots.",
+          ],
+        },
+        {
+          title: "Frontend Technologies",
+          items: [
+            "React 19 + TypeScript + Vite for the SPA and build tooling.",
+            "wouter provides client routing for / , /channel/:id, and /stream/:id.",
+            "Axios powers API calls with retry interceptors for transient network/5xx failures.",
+            "Chart.js + react-chartjs-2 render stream and channel analytics visualizations.",
+            "UI styling uses Tailwind CSS v4 with selected Radix UI primitives.",
+          ],
+        },
+        {
+          title: "Data + Runtime Technologies",
+          items: [
+            "Default DB is SQLite (aiosqlite), with support for Postgres-compatible URLs via DATABASE_URL.",
+            "file_store/ holds DB files, logs, and localized badge assets.",
+            "Badge files are served by FastAPI static mounts at /api/badge-images/*.",
+            "Schema evolution is managed with Alembic migrations.",
+            "The ingestion queue is in-memory, so unconsumed events are not durable across restarts.",
+          ],
+        },
+        {
+          title: "Deployment Technologies",
+          items: [
+            "Docker Compose orchestrates backend and frontend services.",
+            "Backend container: python:3.13-slim + Playwright Chromium, running uvicorn main:app.",
+            "Frontend container: node:20-alpine build stage + nginx:1.27-alpine runtime stage.",
+            "Nginx serves the SPA and reverse-proxies /api requests to the backend service.",
+            "Persistent app data uses the rumble_file_store Docker volume.",
+          ],
+        },
+      ],
+      flows: [
+        {
+          title: "Startup Flow",
+          steps: [
+            "Initialize DB/session/logger/queue.",
+            "Ensure tables exist.",
+            "Start Playwright (when scraper enabled).",
+            "Launch channel monitor + queue consumer tasks.",
+          ],
+        },
+        {
+          title: "Channel Onboarding Flow",
+          steps: [
+            "Frontend submits channel URL to POST /api/channels/.",
+            "Backend validates host + uniqueness.",
+            "Playwright extracts channel metadata.",
+            "Channel is inserted with monitored=true.",
+          ],
+        },
+        {
+          title: "Live Detection Flow",
+          steps: [
+            "Manager refreshes monitored channels from DB.",
+            "Monitors scrape channel pages for live cards/stream URLs.",
+            "Per-stream watcher starts on live detection.",
+            "Watcher is cancelled when stream is idle.",
+          ],
+        },
+        {
+          title: "Ingestion + Consumer Flow",
+          steps: [
+            "`watch_stream()` extracts metadata, messages, badges, donations, and viewership samples.",
+            "Normalized ExtractedMessage events are queued.",
+            "Consumer adapts batch size and performs conflict-safe upserts.",
+            "User state/history and badge localization are persisted.",
+          ],
+        },
+        {
+          title: "Analytics + UI Flow",
+          steps: [
+            "Frontend polls channels, stream metrics, and enriched messages.",
+            "Backend serves DB aggregations and cached analytics snapshots.",
+            "Live views use shorter refresh intervals than historical views.",
+            "Dashboards render channel-level and stream-level drill-down analytics.",
+          ],
+        },
+      ],
+      apiSurface: [
+        {
+          endpoint: "GET /api/channels/",
+          purpose: "List monitored channels.",
+        },
+        {
+          endpoint: "POST /api/channels/",
+          purpose: "Add and validate a channel to monitor.",
+        },
+        {
+          endpoint: "PUT /api/channels/{id}/monitored",
+          purpose: "Toggle channel monitoring state.",
+        },
+        {
+          endpoint: "GET /api/channels/{id}/analytics",
+          purpose: "Channel-level analytics metrics.",
+        },
+        {
+          endpoint: "GET /api/channels/overview",
+          purpose: "Global overview metrics for home dashboard.",
+        },
+        {
+          endpoint:
+            "GET /api/streams/{id}/viewership/aggregated/{bucket_seconds}",
+          purpose: "Bucketed stream viewership series.",
+        },
+        {
+          endpoint: "GET /api/messages/stream/{id}/enriched",
+          purpose: "Live enriched stream messages with user context.",
+        },
+        {
+          endpoint:
+            "GET /api/messages/stream/{id}/aggregated/{aggregation_minutes}",
+          purpose: "Stream message timeline aggregates.",
+        },
+        {
+          endpoint: "GET /api/messages/user/{id}",
+          purpose: "Message history for a specific user.",
+        },
+        {
+          endpoint: "GET /api/users/{id}",
+          purpose: "User profile details.",
+        },
+      ],
+      deploymentNotes: [
+        "Docker Compose mode serves frontend via Nginx and proxies /api to FastAPI backend.",
+        "Backend container runs scraper + ingestion + API against persistent rumble_file_store volume.",
+        "Local dev mode (make dev) runs frontend/backend with Vite /api proxy support.",
+        "Scraper reliability depends on Rumble DOM selectors and may need periodic maintenance.",
+        "Two .env.example flags (RUN_STARTUP_MIGRATIONS, LOCALIZE_BADGES_DURING_STARTUP) are currently not consumed at runtime.",
+      ],
+    },
     problem:
       "Livestream chat moves fast and it's all unstructured text. Tracking what people are saying, who's saying it (even when they change usernames), and how sentiment shifts over time isn't something you can do manually.",
     architecture:
@@ -80,14 +259,13 @@ export const projects: Project[] = [
     },
     liveUrl: "https://graph.connorswis.com",
   },
-
   {
     slug: "map-to-poster",
     title: "MapToPoster Generator",
     tagline: "Turn any city's map data into a stylized poster.",
     status: "Active Build",
     timeline: "2025",
-    signal: "amber",
+    signal: "cyan",
     summary:
       "A tool that pulls OpenStreetMap data for a location and renders it into a styled, print-quality poster.",
     problem:
@@ -108,6 +286,10 @@ export const projects: Project[] = [
     ],
     liveUrl: "https://maptoposter.connorswis.com",
     repoUrl: "https://github.com/ConnorSwis/maptoposter-docker",
+    demoImage: {
+      src: "/demos/map-to-poster-demo.gif",
+      alt: "MapToPoster Demo",
+    },
   },
   {
     slug: "media-server-stack",
@@ -187,24 +369,30 @@ export const projects: Project[] = [
     slug: "discord-casino-bot",
     title: "Discord Casino Bot",
     tagline:
-      "A casino bot with animated graphics, all rendered in Python and played inside Discord.",
-    status: "Archived",
+      "A Discord casino bot with blackjack, slots, and a shared virtual currency system.",
+    status: "Stable/Archived",
     timeline: "2019–2020",
-    signal: "green",
+    signal: "cyan",
     summary:
-      "A Discord bot featuring an animated slot machine, a graphical blackjack table with hand-drawn card assets, and a persistent virtual currency system, all rendered programmatically in Python.",
+      "A Python Discord bot that lets users play blackjack, high card, slots, coin flip, and dice. It stores balances in SQLite and renders game images for blackjack and slots.",
     problem:
-      "Discord bots at the time were all text-based. I wanted to build something visual, animated games with real graphics, which meant generating and compositing images on the fly.",
+      "I wanted casino-style games in Discord with images and animation instead of only text commands.",
     architecture:
-      "Runs on discord.py with async event handling. Game state is tracked per-user with persistence. Graphics are rendered using Pillow, compositing card images and UI elements into animated frames sent as Discord attachments.",
-    stack: ["Python", "discord.py", "Pillow", "asyncio", "SQLite"],
+      "The bot uses discord.py for commands and async events. User data is saved in SQLite. Pillow is used to render blackjack table images and slot GIFs. The repo also includes a FastAPI web demo that runs the same game logic.",
+    stack: ["Python", "discord.py", "FastAPI", "Pillow", "asyncio", "SQLite"],
     highlights: [
-      "Animated slot machine rendered frame by frame.",
-      "Graphical blackjack table with hand-drawn card art.",
-      "Persistent virtual currency system across all users.",
-      "Got 75 stars on GitHub.",
+      "Blackjack with image-based table rendering.",
+      "Slots with animated GIF reels.",
+      "Persistent money and credits for each user.",
+      "Owner commands for economy management.",
     ],
     nextSteps: ["Archived, no further development planned."],
+    repoUrl: "https://github.com/ConnorSwis/casino-bot",
+    liveUrl: "https://casino-bot.connorswis.com",
+    demoImage: {
+      src: "/demos/discord-casino-bot-demo.gif",
+      alt: "Discord Casino Bot Demo",
+    },
   },
   {
     slug: "qr-code-generator",
@@ -231,6 +419,11 @@ export const projects: Project[] = [
       "Support custom styling and branding on generated codes.",
     ],
     liveUrl: "https://qr-code.connorswis.com",
+    repoUrl: "https://github.com/connorswis/qr-code-maker",
+    demoImage: {
+      src: "/demos/qr-code-maker-demo.gif",
+      alt: "QR Code Generator Demo",
+    },
   },
   {
     slug: "spreadsheet-sms-sender",
@@ -257,7 +450,12 @@ export const projects: Project[] = [
       "Add scheduling for delayed message sends.",
       "Support delivery status tracking and reporting.",
     ],
+    repoUrl: "https://github.com/ConnorSwis/csv-to-sms",
     liveUrl: "https://sms.connorswis.com",
+    demoImage: {
+      src: "/demos/csv-to-sms-demo.gif",
+      alt: "Spreadsheet SMS Sender Demo",
+    },
   },
 ];
 
@@ -625,9 +823,3 @@ export const guestbookEntries: GuestbookEntry[] = [
     note: "Respect for running a full self-hosted media stack at home.",
   },
 ];
-
-export const signalLabels: Record<ProjectSignal, string> = {
-  cyan: "STABLE",
-  amber: "ACTIVE",
-  green: "EXPLORATION",
-};

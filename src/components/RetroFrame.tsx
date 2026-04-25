@@ -33,7 +33,7 @@ export function RetroFrame({
     <div className="retro-page">
       <header className="retro-header">
         <div className="browser-title">
-          Netscape Navigator 4.08 :: connor-swislow.homepage
+          Connor Swislow :: About Me :: connorswis.com
         </div>
         <RetroMarquee className="news-ticker" text={tickerText} />
       </header>
