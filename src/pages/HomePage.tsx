@@ -307,26 +307,24 @@ export function HomePage({ visitorCount }: HomePageProps) {
                   <th scope="col">Status</th>
                   <th scope="col">Timeline</th>
                   <th scope="col">Focus</th>
-                  <th scope="col">Open</th>
                 </tr>
               </thead>
               <tbody>
                 {projects.map((project) => (
                   <tr className={`signal-${project.signal}`} key={project.slug}>
                     <td>
-                      <strong>{project.title}</strong>
-                    </td>
-                    <td>{project.status}</td>
-                    <td>{project.timeline}</td>
-                    <td>{project.tagline}</td>
-                    <td>
                       <RouteLink
-                        className="retro-link"
+                        className="retro-link project-title-link"
                         to={`/projects/${project.slug}`}
                       >
-                        ENTER
+                        <strong>{project.title}</strong>
                       </RouteLink>
                     </td>
+                    <td>{project.status}</td>
+                    <td className="project-timeline-cell">
+                      {project.timeline}
+                    </td>
+                    <td>{project.tagline}</td>
                   </tr>
                 ))}
               </tbody>

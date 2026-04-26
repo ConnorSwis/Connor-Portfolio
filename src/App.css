@@ -350,6 +350,14 @@
   letter-spacing: 0.03em;
 }
 
+.project-title-link {
+  font-weight: 700;
+}
+
+.project-timeline-cell {
+  white-space: nowrap;
+}
+
 .signal-cyan {
   background: #e4ffff;
 }
