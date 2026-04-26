@@ -307,7 +307,6 @@ export function HomePage({ visitorCount }: HomePageProps) {
                   <th scope="col">Status</th>
                   <th scope="col">Timeline</th>
                   <th scope="col">Focus</th>
-                  <th scope="col">Links</th>
                   <th scope="col">Open</th>
                 </tr>
               </thead>
@@ -320,37 +319,6 @@ export function HomePage({ visitorCount }: HomePageProps) {
                     <td>{project.status}</td>
                     <td>{project.timeline}</td>
                     <td>{project.tagline}</td>
-                    <td>
-                      <div
-                        className="hangar-links"
-                        role="group"
-                        aria-label="Project links"
-                      >
-                        {project.liveUrl ? (
-                          <a
-                            className="hangar-badge hangar-badge--demo"
-                            href={project.liveUrl}
-                            rel="noreferrer noopener"
-                            target="_blank"
-                          >
-                            DEMO
-                          </a>
-                        ) : null}
-                        {project.repoUrl && (
-                          <a
-                            className="hangar-badge hangar-badge--repo"
-                            href={project.repoUrl}
-                            rel="noreferrer noopener"
-                            target="_blank"
-                          >
-                            REPO
-                          </a>
-                        )}
-                        {!project.liveUrl && !project.repoUrl && (
-                          <span className="hangar-link-muted">N/A</span>
-                        )}
-                      </div>
-                    </td>
                     <td>
                       <RouteLink
                         className="retro-link"
@@ -424,21 +392,25 @@ export function HomePage({ visitorCount }: HomePageProps) {
             className="retro-card"
             id="education"
             message="The education section failed to load."
-            title="Education + Training"
+            title="Education + Experience"
           />
         }
         name="HomeEducation"
       >
         <section className="retro-card" id="education">
-          <h2>Education + Training</h2>
+          <h2>Education + Experience</h2>
           <div className="education-grid">
             {education.map((entry) => (
               <article
                 className="education-item"
                 key={`${entry.school}-${entry.program}`}
               >
+                <p className="education-tag">{entry.category}</p>
                 <h3>{entry.school}</h3>
                 <p className="education-period">{entry.period}</p>
+                {entry.location ? (
+                  <p className="education-location">{entry.location}</p>
+                ) : null}
                 <p className="education-program">{entry.program}</p>
                 <p>{entry.details}</p>
               </article>

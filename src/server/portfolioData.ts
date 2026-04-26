@@ -725,7 +725,7 @@ export const journeyTimeline: TimelineEntry[] = [
     ],
   },
   {
-    period: "Summer 2022",
+    period: "Summers 2023-2025",
     title: "In The City Camps Technology Leadership",
     context:
       "I started as a woodworking specialist, then was promoted to oversee technology and business-side systems.",
@@ -794,18 +794,38 @@ export const journeyTimeline: TimelineEntry[] = [
 
 export const education: EducationEntry[] = [
   {
+    category: "Education",
     school: "Georgia State University",
     program: "B.S. in Mathematics (Concentration in Computer Science)",
     period: "2023 - Present",
+    location: "Atlanta, Georgia",
     details:
-      "Studying math with a CS concentration. Coursework includes Discrete Math, Linear Algebra, Multivariable Calc, Differential Equations, Analysis, Data Structures, Systems Programming, and Computer Architecture.",
+      "Studying math with a CS concentration. Coursework includes Discrete Math, Linear Algebra, Analysis, Data Structures, Systems Programming, and Computer Architecture.",
   },
   {
-    school: "Independent Projects",
-    program: "Practical Systems Development",
-    period: "Ongoing",
+    category: "Education",
+    school: "The Weber School",
+    program: "High School Coursework",
+    period: "2019 - 2023",
+    location: "Sandy Springs, Georgia",
     details:
-      "Building software across scraping, automation, full-stack web dev, infrastructure, data pipelines, and geospatial visualization.",
+      "Completed AP Computer Science A, AP Calculus BC, and multivariable calculus, plus advanced cybersecurity/networking coursework while building practical software and infrastructure projects. Also earned National Honor Society membership, AP Scholar with Distinction, and an honors diploma distinction for dedication to Science, Technology, Engineering, and Design.",
+  },
+  {
+    category: "Experience",
+    school: "In The City Camps",
+    program: "Woodworking Specialist -> Technology Lead",
+    period: "Summers 2023-2025",
+    details:
+      "Started as a woodworking specialist and was promoted to manage camp technology operations, including A/V systems, digital records, staff badge production, vendor communication, and cost reductions.",
+  },
+  {
+    category: "Experience",
+    school: "Interfaith Nonprofit Website Project",
+    program: "Web and SEO Contractor",
+    period: "2021",
+    details:
+      "Contracted to reorganize the nonprofit website, improve search visibility, and modernize key operational workflows across hosting and communications tools.",
   },
 ];
 

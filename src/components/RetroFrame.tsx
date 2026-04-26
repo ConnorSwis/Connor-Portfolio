@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { RetroMarquee } from "./RetroMarquee";
 import { RetroSidebar } from "./RetroSidebar";
+import { useLatestCommitDate } from "../hooks/useLatestCommitDate";
 
 type RetroFrameProps = {
   tickerText: string;
@@ -16,6 +17,8 @@ export function RetroFrame({
   onJumpToSection,
   children,
 }: RetroFrameProps) {
+  const latestCommitDate = useLatestCommitDate();
+
   const sidebarFallback = (
     <aside className="retro-sidebar">
       <p>Navigation is temporarily unavailable.</p>
@@ -60,7 +63,7 @@ export function RetroFrame({
         <RetroMarquee
           className="footer-ticker"
           reverse
-          text={`Welcome, visitor #${visitorCount} · Always under construction · All systems nominal · Last updated 03-30-2026 at 2:34 PM EST · Made by Connor Swislow · © All rights reserved ${new Date().getFullYear()}`}
+          text={`Welcome, visitor #${visitorCount} · Always under construction · All systems nominal · Last updated ${latestCommitDate} · Made by Connor Swislow · © All rights reserved ${new Date().getFullYear()}`}
         />
       </footer>
     </div>

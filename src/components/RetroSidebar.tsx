@@ -6,7 +6,10 @@ type RetroSidebarProps = {
   onJumpToSection?: (sectionId: string) => void;
 };
 
-export function RetroSidebar({ visitorCount, onJumpToSection }: RetroSidebarProps) {
+export function RetroSidebar({
+  visitorCount,
+  onJumpToSection,
+}: RetroSidebarProps) {
   const isHome = Boolean(onJumpToSection);
 
   return (
@@ -16,7 +19,8 @@ export function RetroSidebar({ visitorCount, onJumpToSection }: RetroSidebarProp
       </RouteLink>
 
       <p className="retro-blurb">
-        Personal site. Best viewed in turbo 56k mode.
+        Full-stack engineer building data pipelines, automation, and self-hosted
+        systems from Atlanta.
       </p>
 
       {isHome && (
@@ -27,11 +31,8 @@ export function RetroSidebar({ visitorCount, onJumpToSection }: RetroSidebarProp
           <button onClick={() => onJumpToSection?.("projects")} type="button">
             Projects
           </button>
-          <button onClick={() => onJumpToSection?.("skills")} type="button">
-            Skills
-          </button>
           <button onClick={() => onJumpToSection?.("education")} type="button">
-            Education
+            Education + Experience
           </button>
         </div>
       )}
@@ -58,28 +59,33 @@ export function RetroSidebar({ visitorCount, onJumpToSection }: RetroSidebarProp
       </div>
 
       <div className="webring-shell">
-        <p>WebRing Jump</p>
+        <p>Contact</p>
         <div className="webring-links">
           <a
-            href="https://www.cameronsworld.net/"
-            rel="noreferrer noopener"
-            target="_blank"
+            href="mailto:connorswislow@gmail.com"
           >
-            Previous
+            Email
           </a>
           <a
-            href="https://www.spacejam.com/1996/"
+            href="https://github.com/ConnorSwis"
             rel="noreferrer noopener"
             target="_blank"
           >
-            Random
+            GitHub
           </a>
           <a
-            href="https://archive.org/details/texts?tab=collection&query=geocities"
+            href="https://www.linkedin.com/in/connor-swislow"
             rel="noreferrer noopener"
             target="_blank"
           >
-            Next
+            LinkedIn
+          </a>
+          <a
+            href="https://www.instagram.com/connorswis/"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Instagram
           </a>
         </div>
       </div>

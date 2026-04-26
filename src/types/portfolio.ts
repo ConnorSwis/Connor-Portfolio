@@ -56,9 +56,11 @@ export type SkillGroup = {
 };
 
 export type EducationEntry = {
+  category: "Education" | "Experience";
   school: string;
   program: string;
   period: string;
+  location?: string;
   details: string;
 };
 

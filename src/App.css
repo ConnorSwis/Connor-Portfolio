@@ -717,9 +717,28 @@
   margin-bottom: 0.34rem;
 }
 
+.education-tag {
+  display: inline-block;
+  width: fit-content;
+  margin-bottom: 0.4rem;
+  padding: 0.12rem 0.34rem;
+  border: 1px solid #2e2e2e;
+  background: #e6f2ff;
+  color: #04295f;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 .education-period {
   color: #6a2c00;
   font-weight: 700;
+}
+
+.education-location {
+  color: #414141;
+  font-size: 0.82rem;
 }
 
 .education-program {
