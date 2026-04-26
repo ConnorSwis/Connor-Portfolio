@@ -137,3 +137,9 @@ dist
 .DS_Store
 .agents/skills/SKILL.md
 /.vscode
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
