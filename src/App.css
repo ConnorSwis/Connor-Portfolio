@@ -1314,6 +1314,27 @@
   }
 }
 
+@media (max-width: 1329px) {
+  .retro-header,
+  .retro-footer {
+    max-width: calc(16.5rem + 0.65rem + 780px);
+  }
+
+  .retro-stage {
+    grid-template-columns: 16.5rem minmax(0, 780px);
+    justify-content: center;
+    column-gap: 0.65rem;
+  }
+
+  .retro-sidebar-cell {
+    justify-self: stretch;
+  }
+
+  .retro-content-cell {
+    grid-column: 2;
+  }
+}
+
 @media (max-aspect-ratio: 999/1000) {
   .retro-header,
   .retro-footer {
