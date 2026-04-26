@@ -24,7 +24,7 @@ const formatCommitDate = (isoDate: string): string => {
     timeZoneName: "short",
   });
 
-  return `${dateFormatter.format(date).replaceAll("/", "-")} at ${timeFormatter.format(date)}`;
+  return `${dateFormatter.format(date).split("/").join("-")} at ${timeFormatter.format(date)}`;
 };
 
 const readCachedCommitDate = (): string | null => {
