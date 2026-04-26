@@ -28,7 +28,13 @@
   border-bottom: 2px solid #575757;
 }
 
-.retro-header,
+.retro-header {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  background: #bdbdbd;
+}
+
 .retro-footer {
   width: 100%;
   max-width: 780px;
@@ -1315,9 +1321,14 @@
 }
 
 @media (max-width: 1329px) {
-  .retro-header,
-  .retro-footer {
+  .retro-header {
     max-width: calc(16.5rem + 0.65rem + 780px);
+  }
+
+  .retro-footer {
+    max-width: 780px;
+    margin: 0;
+    margin-left: calc((100% - 16.5rem - 0.65rem - 780px) / 2 + 16.5rem + 0.65rem);
   }
 
   .retro-stage {
@@ -1335,10 +1346,11 @@
   }
 }
 
-@media (max-aspect-ratio: 999/1000) {
+@media (max-width: 949px) {
   .retro-header,
   .retro-footer {
     max-width: none;
+    margin: 0 auto;
   }
 
   .retro-stage {
