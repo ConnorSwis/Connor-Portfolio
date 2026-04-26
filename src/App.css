@@ -1328,7 +1328,9 @@
   .retro-footer {
     max-width: 780px;
     margin: 0;
-    margin-left: calc((100% - 16.5rem - 0.65rem - 780px) / 2 + 16.5rem + 0.65rem);
+    margin-left: calc(
+      (100% - 16.5rem - 0.65rem - 780px) / 2 + 16.5rem + 0.65rem
+    );
   }
 
   .retro-stage {
