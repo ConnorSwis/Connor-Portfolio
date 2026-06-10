@@ -26,7 +26,7 @@ export const projects: Project[] = [
       "A pipeline that scrapes chat messages from livestreams, stores them in a database, and runs sentiment analysis to spot trends and track users over time.",
     extendedContent: {
       overview:
-        "This system continuously monitors selected Rumble channels, detects live broadcasts, ingests chat + viewer telemetry, and serves live analytics to a polling React dashboard.",
+        "The system monitors selected Rumble channels, detects live broadcasts, ingests chat and viewer telemetry, and serves live analytics to a React dashboard.",
       pipelineSummary: [
         "Detect live streams on monitored channels.",
         "Scrape stream metadata, chat messages, donations, badges, and viewer counts.",
@@ -59,41 +59,41 @@ React dashboard (MainDashboard + analytics/chart views)`,
         {
           title: "Backend Technologies",
           items: [
-            "FastAPI + Uvicorn power the API server, lifecycle hooks, middleware, and routing.",
-            "Playwright (Chromium) + asyncio run channel polling and per-stream live chat/viewership scraping.",
-            "SQLAlchemy 2 (async) + Pydantic v2 handle ORM models, query layers, and request/response schemas.",
-            "Ingestion uses an asyncio.Queue with batched upserts for users, messages, badges, and subscriptions.",
-            "API response optimization uses an in-process TTL cache and persisted historical analytics snapshots.",
+            "FastAPI + Uvicorn runs the API server, with lifecycle hooks, middleware, and routing.",
+            "Playwright (Chromium) + asyncio handle channel polling and live chat/viewership scraping.",
+            "SQLAlchemy 2 (async) + Pydantic v2 manage ORM models, queries, and request/response schemas.",
+            "An asyncio.Queue with batched upserts handles users, messages, badges, and subscriptions.",
+            "An in-process TTL cache and persisted analytics snapshots optimize API responses.",
           ],
         },
         {
           title: "Frontend Technologies",
           items: [
             "React 19 + TypeScript + Vite for the SPA and build tooling.",
-            "wouter provides client routing for / , /channel/:id, and /stream/:id.",
-            "Axios powers API calls with retry interceptors for transient network/5xx failures.",
-            "Chart.js + react-chartjs-2 render stream and channel analytics visualizations.",
-            "UI styling uses Tailwind CSS v4 with selected Radix UI primitives.",
+            "wouter handles client routing for /, /channel/:id, and /stream/:id.",
+            "Axios powers API calls with retry interceptors for transient failures.",
+            "Chart.js + react-chartjs-2 render stream and channel visualizations.",
+            "Tailwind CSS v4 + Radix UI primitives handle styling and UI components.",
           ],
         },
         {
           title: "Data + Runtime Technologies",
           items: [
-            "Default DB is SQLite (aiosqlite), with support for Postgres-compatible URLs via DATABASE_URL.",
-            "file_store/ holds DB files, logs, and localized badge assets.",
-            "Badge files are served by FastAPI static mounts at /api/badge-images/*.",
-            "Schema evolution is managed with Alembic migrations.",
-            "The ingestion queue is in-memory, so unconsumed events are not durable across restarts.",
+            "SQLite (aiosqlite) by default, Postgres via DATABASE_URL.",
+            "file_store/ holds DB files, logs, and badge assets locally.",
+            "Badge files are served at /api/badge-images/* via FastAPI static mounts.",
+            "Alembic handles schema migrations.",
+            "The ingestion queue is in-memory, so events don't survive restarts.",
           ],
         },
         {
           title: "Deployment Technologies",
           items: [
             "Docker Compose orchestrates backend and frontend services.",
-            "Backend container: python:3.13-slim + Playwright Chromium, running uvicorn main:app.",
-            "Frontend container: node:20-alpine build stage + nginx:1.27-alpine runtime stage.",
-            "Nginx serves the SPA and reverse-proxies /api requests to the backend service.",
-            "Persistent app data uses the rumble_file_store Docker volume.",
+            "Backend: python:3.13-slim + Playwright Chromium, running uvicorn main:app.",
+            "Frontend: node:20-alpine build stage, nginx:1.27-alpine for runtime.",
+            "Nginx serves the SPA and proxies /api to the backend.",
+            "The rumble_file_store Docker volume persists app data.",
           ],
         },
       ],
@@ -119,28 +119,28 @@ React dashboard (MainDashboard + analytics/chart views)`,
         {
           title: "Live Detection Flow",
           steps: [
-            "Manager refreshes monitored channels from DB.",
-            "Monitors scrape channel pages for live cards/stream URLs.",
+            "Manager refreshes monitored channels from the database.",
+            "Monitors scrape channel pages for live cards and stream URLs.",
             "Per-stream watcher starts on live detection.",
-            "Watcher is cancelled when stream is idle.",
+            "Watcher is cancelled when the stream goes idle.",
           ],
         },
         {
           title: "Ingestion + Consumer Flow",
           steps: [
-            "`watch_stream()` extracts metadata, messages, badges, donations, and viewership samples.",
+            "watch_stream() extracts metadata, messages, badges, donations, and viewership samples.",
             "Normalized ExtractedMessage events are queued.",
             "Consumer adapts batch size and performs conflict-safe upserts.",
-            "User state/history and badge localization are persisted.",
+            "User state, history, and badge assets are persisted.",
           ],
         },
         {
           title: "Analytics + UI Flow",
           steps: [
             "Frontend polls channels, stream metrics, and enriched messages.",
-            "Backend serves DB aggregations and cached analytics snapshots.",
+            "Backend serves database aggregations and cached snapshots.",
             "Live views use shorter refresh intervals than historical views.",
-            "Dashboards render channel-level and stream-level drill-down analytics.",
+            "Dashboards show channel-level and stream-level analytics.",
           ],
         },
       ],
@@ -189,28 +189,27 @@ React dashboard (MainDashboard + analytics/chart views)`,
         },
       ],
       deploymentNotes: [
-        "Docker Compose mode serves frontend via Nginx and proxies /api to FastAPI backend.",
-        "Backend container runs scraper + ingestion + API against persistent rumble_file_store volume.",
-        "Local dev mode (make dev) runs frontend/backend with Vite /api proxy support.",
-        "Scraper reliability depends on Rumble DOM selectors and may need periodic maintenance.",
-        "Two .env.example flags (RUN_STARTUP_MIGRATIONS, LOCALIZE_BADGES_DURING_STARTUP) are currently not consumed at runtime.",
+        "Docker Compose serves the frontend via Nginx and proxies /api to the FastAPI backend.",
+        "Backend container runs scraper, ingestion, and API against the rumble_file_store volume.",
+        "Local dev (make dev) runs frontend/backend with Vite /api proxy support.",
+        "Scraper reliability depends on Rumble DOM selectors and needs periodic maintenance.",
       ],
     },
     problem:
-      "Livestream chat moves fast and it's all unstructured text. Tracking what people are saying, who's saying it (even when they change usernames), and how sentiment shifts over time isn't something you can do manually.",
+      "Livestream chat moves fast and it's all unstructured. You can't manually track who's saying what, especially when people change usernames or profiles. Sentiment shifts are real but invisible without tools to spot them.",
     architecture:
-      "Playwright watches active streams and feeds messages into an async processing queue. Messages get normalized, tagged with user metadata, and stored in PostgreSQL for analysis and visualization.",
+      "Playwright watches active streams and pushes messages into an async queue. Messages get normalized with user metadata and stored in PostgreSQL. The dashboard polls this for live analytics.",
     stack: ["FastAPI", "Playwright", "Python", "Redis", "SQLAlchemy"],
     highlights: [
-      "Continuously scrapes live chat from active streams.",
-      "Tracks users even when they change their username or profile.",
-      "Runs sentiment scoring on messages for visualization.",
-      "Uses async queues so it can handle high message volume.",
+      "Scrapes live chat continuously from active streams.",
+      "Identifies users across username and profile changes.",
+      "Scores messages for sentiment, shows trends in real time.",
+      "Handles high message volume through async processing.",
     ],
     nextSteps: [
-      "Scale to handle millions of messages.",
-      "Add topic modeling and toxicity detection.",
-      "Build a dashboard to explore chat trends over time.",
+      "Handle millions of messages per stream.",
+      "Add topic clustering and toxicity detection.",
+      "Let users explore chat patterns and trends.",
     ],
     // demoImage: {
     //   src: "/demos/rumble-frontend-demo.gif",
@@ -229,9 +228,9 @@ React dashboard (MainDashboard + analytics/chart views)`,
     summary:
       "A system that scrapes public Instagram posts and account info, structures it into a Markdown knowledge base, and maps out geographic patterns and relationships between accounts.",
     problem:
-      "Public social media data is scattered and messy. It's hard to spot patterns in activity, track accounts that change names, or see where things are happening geographically without building tools to do it.",
+      "Public social media data lives in different places and formats. You can't easily spot activity patterns, track accounts when they change names, or see where things are happening without custom tools.",
     architecture:
-      "A FastAPI service orchestrates Apify scrapers that pull Instagram posts and profile metadata. Celery workers (with Redis as broker) run scheduled auto-updates, download media locally, and normalize records into versioned Markdown files via Jinja templates. Geographic and relationship layers sit on top for visualization.",
+      "A FastAPI service runs Apify scrapers to pull Instagram posts and profile data. Celery workers on a Redis queue handle scheduled updates, download media, and export to versioned Markdown files. Geographic and relationship visualization sits on top.",
     stack: [
       "FastAPI",
       "Celery",
@@ -242,15 +241,15 @@ React dashboard (MainDashboard + analytics/chart views)`,
       "Pydantic",
     ],
     highlights: [
-      "Automated pipelines that scrape public Instagram posts and profiles via Apify.",
-      "Scheduled auto-updates and profile caching keep accounts tracked even when usernames or profiles change.",
-      "Local media download and a versioned Markdown export pipeline produce a portable knowledge base.",
-      "Maps activity geographically and structures data for network/relationship analysis.",
+      "Scrapes Instagram posts and profiles automatically via Apify.",
+      "Keeps accounts tracked across username changes through cached profiles and scheduled updates.",
+      "Downloads media locally and exports to versioned Markdown files for portability.",
+      "Maps activity by location and structures data for network analysis.",
     ],
     nextSteps: [
-      "Add community detection and network analysis.",
+      "Detect communities and analyze relationships.",
       "Add sentiment and topic modeling.",
-      "Build interactive dashboards for exploring the data.",
+      "Build a web interface for exploring the data.",
     ],
     demoImage: {
       src: "/demos/social-media-intelligence-mapper-demo.gif",
@@ -269,20 +268,20 @@ React dashboard (MainDashboard + analytics/chart views)`,
     summary:
       "A tool that pulls OpenStreetMap data for a location and renders it into a styled, print-quality poster.",
     problem:
-      "Map data has tons of detail but it doesn't look good as-is. Turning raw street geometry into something you'd actually want to print and hang up takes a custom rendering pipeline.",
+      "Raw map data is detailed but ugly. Making it into something worth printing and hanging on a wall requires a custom rendering pipeline.",
     architecture:
-      "Pulls street and place geometry from OpenStreetMap, runs it through custom rendering logic, and outputs themed poster designs with consistent styling.",
+      "Fetches street and landmark data from OpenStreetMap, applies themed rendering, and outputs print-quality images.",
     stack: ["FastAPI", "Flask", "Matplotlib", "OSMnx", "Python"],
     highlights: [
-      "Repeatable pipeline that generates posters for any city.",
-      "Multiple themes and color schemes to choose from.",
-      "Outputs high-res images that are print-ready.",
-      "Combines data processing with design in one tool.",
+      "Generate posters for any city with the same pipeline.",
+      "Pick from different themes and color schemes.",
+      "Output high-res images ready for print.",
+      "Handles both data processing and design.",
     ],
     nextSteps: [
-      "Add a web UI for customizing posters.",
-      "Let users pick any location and save theme presets.",
-      "Add more export options for different print sizes.",
+      "Build a web UI for real-time customization.",
+      "Let users save and reuse theme presets.",
+      "Add more export formats for different print sizes.",
     ],
     liveUrl: "https://maptoposter.connorswis.com",
     repoUrl: "https://github.com/ConnorSwis/maptoposter-docker",
@@ -302,9 +301,9 @@ React dashboard (MainDashboard + analytics/chart views)`,
     summary:
       "A self-hosted media server running in Docker that automatically finds, downloads, organizes, and streams movies, TV shows, and music across my home network.",
     problem:
-      "Managing media across a bunch of different services by hand is a pain. I wanted everything automated, from finding new releases to organizing files to streaming them.",
+      "Managing movies, TV, and music across different services is tedious. I wanted one place to find releases, download them, and stream them all.",
     architecture:
-      "A stack of containerized services handles media discovery, downloading, indexing, and streaming. Reverse proxies and storage mounts tie everything together into a single platform.",
+      "Multiple Docker containers handle discovery, downloading, organizing, and streaming. Nginx proxies everything and storage mounts persist data across services.",
     stack: [
       "Docker",
       "Docker Compose",
@@ -319,14 +318,14 @@ React dashboard (MainDashboard + analytics/chart views)`,
     ],
     highlights: [
       "Runs a full media stack with multiple services in Docker.",
-      "Automates the whole flow from finding media to streaming it.",
-      "Handles storage, networking, and persistent data across all services.",
-      "Gave me hands-on experience running production-style infrastructure.",
+      "Automates the flow from discovery to download to streaming.",
+      "Manages storage and networking across all services.",
+      "Experience running production-style infrastructure at home.",
     ],
     nextSteps: [
       "Add better monitoring and health checks.",
-      "Set up proper backups and tighten remote access.",
-      "Automate more of the maintenance.",
+      "Set up backups and secure remote access.",
+      "Automate maintenance tasks.",
     ],
   },
   {
@@ -340,9 +339,9 @@ React dashboard (MainDashboard + analytics/chart views)`,
     summary:
       "My personal server built on a Raspberry Pi, running Docker containers, reverse-proxied services, and a mesh VPN for remote access from anywhere.",
     problem:
-      "I wanted to host my own projects without paying for cloud hosting, and building the infrastructure myself teaches you way more about how systems actually work.",
+      "I wanted to host projects without paying cloud providers. Building the infrastructure myself teaches you way more than any tutorial.",
     architecture:
-      "Traffic comes in through my domain via Cloudflare, hits Nginx Proxy Manager for routing, and gets forwarded to Docker containers managed through Portainer. A mesh VPN lets me deploy and manage everything remotely.",
+      "Domain traffic goes through Cloudflare, then Nginx Proxy Manager routes requests to Docker containers managed via Portainer. A mesh VPN lets me deploy and manage things remotely.",
     stack: [
       "Cloudflare",
       "Docker",
@@ -353,16 +352,16 @@ React dashboard (MainDashboard + analytics/chart views)`,
       "Raspberry Pi",
     ],
     highlights: [
-      "Runs a full container platform on a Raspberry Pi.",
-      "Routes my domain through Cloudflare and Nginx Proxy Manager.",
-      "Set up cloud storage, file transfer, and remote access.",
-      "Built a mesh VPN for managing everything remotely.",
+      "Runs a complete container platform on a Raspberry Pi.",
+      "Routes domain traffic through Cloudflare and Nginx Proxy Manager.",
+      "Cloud storage, file transfer, and remote access all working.",
+      "Mesh VPN lets me manage everything from anywhere.",
       "Hosts multiple live projects.",
     ],
     nextSteps: [
-      "Add monitoring and alerts.",
+      "Add monitoring and alerting.",
       "Automate backups.",
-      "Add more hardware to expand capacity.",
+      "Expand capacity with more hardware.",
     ],
   },
   {
@@ -376,17 +375,17 @@ React dashboard (MainDashboard + analytics/chart views)`,
     summary:
       "A Python Discord bot that lets users play blackjack, high card, slots, coin flip, and dice. It stores balances in SQLite and renders game images for blackjack and slots.",
     problem:
-      "I wanted casino-style games in Discord with images and animation instead of only text commands.",
+      "Discord bots were all text commands. I wanted to build actual games with visuals.",
     architecture:
-      "The bot uses discord.py for commands and async events. User data is saved in SQLite. Pillow is used to render blackjack table images and slot GIFs. The repo also includes a FastAPI web demo that runs the same game logic.",
+      "discord.py handles commands and events. User balances live in SQLite. Pillow renders blackjack tables and slot reels as GIFs. The repo includes a FastAPI web version of the same games.",
     stack: ["Python", "discord.py", "FastAPI", "Pillow", "asyncio", "SQLite"],
     highlights: [
-      "Blackjack with image-based table rendering.",
+      "Blackjack with rendered table images.",
       "Slots with animated GIF reels.",
-      "Persistent money and credits for each user.",
-      "Owner commands for economy management.",
+      "User balances persist in the database.",
+      "Owner commands for managing the economy.",
     ],
-    nextSteps: ["Archived, no further development planned."],
+    nextSteps: ["Archived. No further development."],
     repoUrl: "https://github.com/ConnorSwis/casino-bot",
     liveUrl: "https://casino-bot.connorswis.com",
     demoImage: {
@@ -405,18 +404,18 @@ React dashboard (MainDashboard + analytics/chart views)`,
     summary:
       "A simple web app that generates QR codes completely client-side. Your data never leaves your browser.",
     problem:
-      "Most QR code generators online send your input to a server. That's unnecessary and a privacy concern, especially for sensitive content.",
+      "QR code generators send your data to a server. That's unnecessary and a privacy risk for sensitive content.",
     architecture:
-      "Everything runs in the browser using JavaScript. Input gets encoded locally and the QR code is rendered to a canvas element for download.",
+      "Everything runs in the browser. JavaScript encodes your input locally, renders the QR code to canvas, and lets you download it.",
     stack: ["HTML", "CSS", "JavaScript", "Canvas API"],
     highlights: [
-      "No server calls, everything happens in the browser.",
-      "Supports different content types and sizes.",
+      "All processing happens in your browser. No server uploads.",
+      "Supports different content types and QR sizes.",
       "Hosted on my Raspberry Pi server.",
     ],
     nextSteps: [
-      "Add batch generation from CSV input.",
-      "Support custom styling and branding on generated codes.",
+      "Batch generate codes from a CSV file.",
+      "Custom styling and branding options.",
     ],
     liveUrl: "https://qr-code.connorswis.com",
     repoUrl: "https://github.com/connorswis/qr-code-maker",
@@ -435,20 +434,19 @@ React dashboard (MainDashboard + analytics/chart views)`,
     signal: "cyan",
     summary:
       "A web app that reads contacts from a spreadsheet and sends each person a personalized text message. Built for organizations running campaigns or reminders.",
-    problem:
-      "Sending individual texts to a big list of contacts by hand is tedious and error-prone. This automates it.",
+    problem: "Texting a big list of people one by one is slow and error-prone.",
     architecture:
-      "The frontend lets you upload a spreadsheet and preview templated messages with per-row variables. The backend processes the data and sends messages through an SMS API.",
+      "Upload a spreadsheet, preview templated messages with per-row variables, then send through an SMS API.",
     stack: ["Python", "FastAPI", "JavaScript", "HTML/CSS"],
     highlights: [
       "Parses CSV and Excel spreadsheets.",
-      "Supports message templates with per-row variables.",
-      "Previews messages before sending.",
+      "Message templates with per-row variables.",
+      "Preview before sending.",
       "Hosted on my Raspberry Pi server.",
     ],
     nextSteps: [
-      "Add scheduling for delayed message sends.",
-      "Support delivery status tracking and reporting.",
+      "Schedule delayed sends.",
+      "Delivery status tracking and reporting.",
     ],
     repoUrl: "https://github.com/ConnorSwis/csv-to-sms",
     liveUrl: "https://sms.connorswis.com",
@@ -503,70 +501,67 @@ React dashboard (MainDashboard + analytics/chart views)`,
 //   },
 // ];
 
-// My name is connor swislow I am (calculate age using my birthday 9/24/2004) years old and I am a student at Georgia State University studying Mathematics with a concentration in Computer Science.
+// My name is Connor Swislow. I'm a student at Georgia State University studying Mathematics with a concentration in Computer Science.
 
-// The first point in my programming journey started when I was in middle school. I saw videos of "Scam Baiting" where people would intentionally call known tech support scam numbers to waste their time which would prevent the scammers from speaking with real vulnerable victims. Part of the scam was getting permission from the victim to allow the scammer access to the computer, where they would usually try to convince you there are hackers on the computer and display a bill for an antivirus package that costs somewhere around $700. This step of gaining access to the victim's computer is crucial for filtering victims to see who is willing and trusting enough to give complete strangers full access to their computers. Of course, if you're scambaiting, it would be a horrible idea to use your real personal computer to do this. So, I learned about virtual machines to set up a fake windows machine to allow scammers to connect. I would spend hours baiting the scammers in middle school. This taught me a lot about operating systems, hardware, and social engineering and it introduced me to Linux. I was very interested in hacking at this time, so I installed a kali linux virtual machine to learn about hacking. I learned about Metasploit, Jack the Ripper, NetCat, WireShark, reverse shell attacks, remote access trojans, and internet protocols, all around the ages of 13-14.
+// I got into scam-baiting in middle school. The idea was simple: call tech support scams and let them connect to a VM instead of a real computer, wasting their time so they couldn't target vulnerable people. That meant learning virtual machines, operating systems, and a lot about how these schemes work. I also got curious about hacking, so I set up Kali Linux and taught myself Metasploit, NetCat, and basic penetration testing tools. Nothing serious—just exploring in a sandbox.
 
-// I bought a Raspberry Pi Zero W around this time so I could test out some of the penetration testing skills I had learned about. But this introduced me to networking in a way that helped me go on to gain a deep understanding of networks. I learned about internet configuration, port forwarding, FileZilla/FTP, and SSH.
+// I picked up a Raspberry Pi and started playing with networking. SSH, FTP, port forwarding. Got my feet wet with actual systems instead of just reading about them.
 
-// I began programming in high school as a freshman when I was introduced to Python. I learned quickly by making discord bots and API's. One special project from that time was a casino bot that had an animated slot machine and a graphical blackjack table, all hand drawn and rendered programmatically, and a currency system. This project ended up getting 75 stars on Github.
+// Freshman year of high school I started programming in Python. Mostly Discord bots and APIs. One project that stuck: a casino bot with hand-drawn slot machine and blackjack graphics, rendered programmatically. Got 75 stars on GitHub, which felt huge at the time.
 
-// During that time, I also branched out to full stack development when I used FastAPI to serve endpoints with Jinja templates. I would write the HTML, CSS, and eventually javascript. I also learned HTMX at this time.
+// After that I branched into full-stack work. FastAPI for the backend, HTML/CSS/JavaScript for the frontend. Picked up HTMX too. Sophomore year I took AP Computer Science A and scored a 5. I liked security enough to ask my teacher if we could do a dedicated class on it. He agreed, so junior year I took Cybersecurity and Networking, learned Cisco Packet Tracer and how to think about threats.
 
-// As a sophomore, I took AP Computer Science A, which I got a 5 on the exam. I asked the teacher to make a class about cybersecurity because I was very interested in it at the time, to which he agreed. So, in my junior year I took a class in Cybersecurity and Networking, where I learned Cisco Packet Tracer. During my sophomore year, I was contracted to reorganize the website for a non-profit which was focused on creating communities of people of all faiths. Their system used WordPress, MailChimp, and GoDaddy. I spent a month restructuring their site and boosting their SEO.
+// That same year I got contracted to reorganize a nonprofit's website. They used WordPress, MailChimp, and GoDaddy. Spent a month restructuring everything and improving their SEO.
 
-// Then in my junior year of high school, I started exploring microservices and learned how to use Docker and build and distribute apps. I also started learning React which taught me TypeScript. I learned the full stack framework, Remix.run. But that time had a lot of developments in the full stack space so I explored lots of softwares and tools like Next.js, Vite, Bun, Tailwind Css, Firebase, Vercel, Clerk, Stripe, and Redis. I learned about serverless function, edge computing, and service workers.
+// Junior year I also started exploring microservices and Docker. Learned React, which meant learning TypeScript. Tried out Remix, Next.js, Vite, and Bun. Got curious about serverless, edge computing, service workers. The JavaScript ecosystem was moving fast and I wanted to see what stuck.
 
-// Over the summer break before my senior year, I worked at In The City Camps, a non-profit summer camp, as a Woodworking Specialist, engaging children ages 6-14 in shop skills like measuring, hammering, and sawing. At summer camp, I stepped up and helped leadership with all sorts of technology related problems, and they promoted me to be in charge of all the technology in the camp and some of the business/enterprise related tech. I was responsible over audio and video equipment, organizing and managing digital records, designing and printing staff badges, communicating with representatives from external companies on behalf of the non-profit, and reducing expenses around technology.
+// Before senior year I worked at In The City Camps as a woodworking specialist. Got good at measuring, hammering, sawing with kids ages 6-14. But I also ended up fixing tech problems for camp leadership, and they promoted me to manage all the camp technology. Handled audio/video equipment, digital records, staff badge production, vendor communication, and finding ways to cut costs.
 
-// Over the last two years, I have been working on my home lab. I bought my personal domain and routed it through cloudflare. On my pi, I set up docker, portainer, and nginx proxy manager, and these allow me to deploy any docker image from anywhere in the world. I set up cloud storage, p2p file transfer, remote access, a Virtual Private Mesh Network, and dynamic DNS. I started building projects and deploying them to the server. I made a client-side qr-code generator, a website to send texts to people on a spreadsheet, a map creator that generates a themed map of a specified location, a website that tracks sentiment on a stream site, and a social media tracker that automatically tracks and maps social media activity of specified accounts.
+// For the last couple years I've been building a home lab. Bought a domain, routed it through Cloudflare. Set up Docker, Portainer, and Nginx Proxy Manager on a Raspberry Pi so I could deploy services from anywhere. Added cloud storage, peer-to-peer file transfer, remote access, a mesh VPN, dynamic DNS. Built and deployed a bunch of projects: a client-side QR code generator, SMS sender for spreadsheets, a map poster generator, stream sentiment tracker, and a social media intelligence tool.
 
-export const journeyTimeline: TimelineEntry[] = [
+export const timeline: TimelineEntry[] = [
   {
     period: "2017-2018",
     title: "Scam-Baiting",
     context:
-      "As a middle schooler, I got into scam-baiting, where I would call tech support scam numbers and let scammers connect to a virtual machine to waste their time and prevent them from scamming real victims.",
-    skillJourney: [
+      "I called tech support scam numbers and let scammers connect to a VM to waste their time instead of targeting real victims.",
+    timeline: [
       {
         skill: "Virtual machines and sandboxing",
-        learnedBy:
-          "Set up and seeded a fake Windows VM for scammers to connect to.",
+        learnedBy: "Built a fake Windows VM that scammers could connect to.",
       },
       {
         skill: "Operating systems and hardware",
-        learnedBy:
-          "Had to understand system internals to make the VM look real.",
+        learnedBy: "Had to make the VM believable.",
       },
       {
         skill: "Social engineering",
         learnedBy:
-          "Spent hours talking to scammers, learning how they operate.",
+          "Spent hours talking to scammers and watching their tactics.",
       },
     ],
   },
   {
     period: "2018",
     title: "Kali Linux Exploration",
-    context:
-      "I set up a Kali Linux VM and practiced offensive-security concepts in a controlled environment.",
-    skillJourney: [
+    context: "I set up a Kali Linux VM and ran security tools in a sandbox.",
+    timeline: [
       {
         skill: "Metasploit",
-        learnedBy: "Ran exploits and learned the basics of post-exploitation.",
+        learnedBy: "Ran exploits and learned post-exploitation basics.",
       },
       {
         skill: "Netcat and reverse shells",
         learnedBy:
-          "Set up listeners and reverse shells to see how remote access works.",
+          "Set up listeners and reverse shells to understand remote access.",
       },
       {
         skill: "John the Ripper",
-        learnedBy: "Cracked test passwords and hashes.",
+        learnedBy: "Cracked test hashes.",
       },
       {
         skill: "TOR Browser",
-        learnedBy: "Explored anonymous browsing and the dark web.",
+        learnedBy: "Explored anonymous browsing.",
       },
     ],
   },
@@ -574,8 +569,8 @@ export const journeyTimeline: TimelineEntry[] = [
     period: "2018-2019",
     title: "Raspberry Pi Zero W Networking",
     context:
-      "As an eighth grader, I received a Raspberry Pi Zero W and I began experimenting on it.",
-    skillJourney: [
+      "I got a Raspberry Pi and started experimenting with networking on it.",
+    timeline: [
       {
         skill: "SSH operations",
         learnedBy: "Managed the Pi remotely over SSH.",
@@ -587,11 +582,11 @@ export const journeyTimeline: TimelineEntry[] = [
       {
         skill: "Network configuration",
         learnedBy:
-          "Configured static IPs, router settings, and fixed network issues.",
+          "Set static IPs, configured router settings, debugged network issues.",
       },
       {
         skill: "Port forwarding",
-        learnedBy: "Set up port forwarding to expose services from home.",
+        learnedBy: "Exposed services from home to the internet.",
       },
     ],
   },
@@ -599,11 +594,11 @@ export const journeyTimeline: TimelineEntry[] = [
     period: "2019-2020",
     title: "Freshman Year: Python",
     context:
-      "I started programming with Python in high school and learned quickly by building bots and APIs.",
-    skillJourney: [
+      "I learned Python in high school by building Discord bots and APIs.",
+    timeline: [
       {
         skill: "API development",
-        learnedBy: "Built API endpoints for my Python projects.",
+        learnedBy: "Built endpoints for my Python projects.",
       },
       {
         skill: "Bot architecture",
@@ -613,11 +608,11 @@ export const journeyTimeline: TimelineEntry[] = [
       {
         skill: "Programmatic graphics",
         learnedBy:
-          "Made a casino bot with hand-drawn slot machine and blackjack graphics rendered in code.",
+          "Made a casino bot with hand-drawn slot and blackjack graphics rendered in code.",
       },
       {
         skill: "Python development",
-        learnedBy: "Wrote scripts and bot features that actually got used.",
+        learnedBy: "Wrote scripts and bot features that people actually used.",
       },
     ],
   },
@@ -625,8 +620,8 @@ export const journeyTimeline: TimelineEntry[] = [
     period: "2020-2021",
     title: "Sophomore Year: Web Stack Expansion",
     context:
-      "I moved into full-stack development and started building frontends, not just backends. Also took AP Computer Science A and learned Java.",
-    skillJourney: [
+      "I moved into full-stack development and started building frontends alongside backends. Also took AP Computer Science A and learned Java.",
+    timeline: [
       {
         skill: "FastAPI and Jinja",
         learnedBy: "Built dynamic pages with FastAPI and Jinja templates.",
@@ -638,8 +633,7 @@ export const journeyTimeline: TimelineEntry[] = [
       },
       {
         skill: "HTMX",
-        learnedBy:
-          "Used HTMX for interactive pages without needing a full frontend framework.",
+        learnedBy: "Built interactive pages without a full frontend framework.",
       },
       {
         skill: "Java and OOP fundamentals",
@@ -651,8 +645,8 @@ export const journeyTimeline: TimelineEntry[] = [
     period: "2021",
     title: "Nonprofit Website Contract",
     context:
-      "I was contracted to reorganize an interfaith nonprofit site and improve search visibility.",
-    skillJourney: [
+      "I was hired to reorganize a nonprofit's website and improve search visibility.",
+    timeline: [
       {
         skill: "SEO optimization",
         learnedBy:
@@ -666,12 +660,12 @@ export const journeyTimeline: TimelineEntry[] = [
       {
         skill: "Mailchimp and GoDaddy workflows",
         learnedBy:
-          "Got their email campaigns and hosting set up to work with their existing workflow.",
+          "Set up email campaigns and hosting to work with their workflow.",
       },
       {
         skill: "Client delivery",
         learnedBy:
-          "Managed the project over a month, communicating with stakeholders throughout.",
+          "Managed the project over a month, keeping stakeholders informed.",
       },
     ],
   },
@@ -679,8 +673,8 @@ export const journeyTimeline: TimelineEntry[] = [
     period: "2021-2022",
     title: "Junior Year: Cybersecurity and Networking",
     context:
-      "After I requested a dedicated class, I took Cybersecurity and Networking in junior year.",
-    skillJourney: [
+      "I requested a dedicated cybersecurity class and took it in junior year.",
+    timeline: [
       {
         skill: "Cisco Packet Tracer",
         learnedBy:
@@ -688,21 +682,20 @@ export const journeyTimeline: TimelineEntry[] = [
       },
       {
         skill: "Network troubleshooting",
-        learnedBy: "Debugged network issues.",
+        learnedBy: "Debugged network problems.",
       },
       {
         skill: "Security design",
         learnedBy:
-          "Learned to think about threats and apply practical security hardening.",
+          "Learned to think about threats and apply practical hardening.",
       },
     ],
   },
   {
     period: "2022",
     title: "Microservices and Full-Stack Sites",
-    context:
-      "I built microservices and explored the evolving JavaScript ecosystem.",
-    skillJourney: [
+    context: "I built microservices and explored the JavaScript ecosystem.",
+    timeline: [
       {
         skill: "React and TypeScript",
         learnedBy: "Built frontend apps with typed React components.",
@@ -715,12 +708,12 @@ export const journeyTimeline: TimelineEntry[] = [
       {
         skill: "Remix, Next.js, Vite, and Bun",
         learnedBy:
-          "Tried out different frameworks to see what worked best for different use cases.",
+          "Tried different frameworks to see what worked best for different cases.",
       },
       {
         skill: "Serverless, edge, and service workers",
         learnedBy:
-          "Deployed to Vercel, learned about edge computing and service workers.",
+          "Deployed to Vercel, learned edge computing and service workers.",
       },
     ],
   },
@@ -728,11 +721,11 @@ export const journeyTimeline: TimelineEntry[] = [
     period: "Summers 2023-2025",
     title: "In The City Camps Technology Leadership",
     context:
-      "I started as a woodworking specialist, then was promoted to oversee technology and business-side systems.",
-    skillJourney: [
+      "I started as a woodworking specialist and was promoted to oversee technology and business systems.",
+    timeline: [
       {
         skill: "A/V systems",
-        learnedBy: "Set up and managed all the audio/video equipment.",
+        learnedBy: "Set up and managed all audio and video equipment.",
       },
       {
         skill: "Business communications",
@@ -740,8 +733,7 @@ export const journeyTimeline: TimelineEntry[] = [
       },
       {
         skill: "Digital records management",
-        learnedBy:
-          "Organized digital records so things were actually findable.",
+        learnedBy: "Organized digital records so they were actually findable.",
       },
       {
         skill: "Technology cost reduction",
@@ -754,7 +746,7 @@ export const journeyTimeline: TimelineEntry[] = [
   //   title: "Georgia State University",
   //   context:
   //     "I am pursuing Mathematics with a Computer Science concentration while working on software projects.",
-  //   skillJourney: [
+  //   timeline: [
   //     {
   //       skill: "Long-horizon project execution",
   //       learnedBy:
@@ -771,12 +763,12 @@ export const journeyTimeline: TimelineEntry[] = [
     period: "2024-Present",
     title: "Home Lab Infrastructure and Deployed Systems",
     context:
-      "Over the last two years, I have built a home lab, then deployed multiple full projects to a Raspberry Pi server stack.",
-    skillJourney: [
+      "I built a home lab and deployed multiple projects to a Raspberry Pi server stack.",
+    timeline: [
       {
         skill: "Domain and edge routing",
         learnedBy:
-          "Bought my own domain and routed traffic through Cloudflare to protect my server. Set up Nginx Proxy Manager to route requests to different services based on URL patterns.",
+          "Bought a domain and routed traffic through Cloudflare. Set up Nginx Proxy Manager to route requests based on URL patterns.",
       },
       {
         skill: "Remote networking stack",
@@ -796,36 +788,20 @@ export const education: EducationEntry[] = [
   {
     category: "Education",
     school: "Georgia State University",
-    program: "B.S. in Mathematics (Concentration in Computer Science)",
+    program: "B.S. in Computer Science",
     period: "2023 - Present",
     location: "Atlanta, Georgia",
     details:
-      "Studying math with a CS concentration. Coursework includes Discrete Math, Linear Algebra, Analysis, Data Structures, Systems Programming, and Computer Architecture.",
+      "GPA: 3.8/4.0. Dean's List every semester (Fall 2023–Spring 2026). Relevant coursework includes Data Structures, Computer Science II, Discrete Mathematics, Calculus III, Applied Probability & Statistics, and Physics II.",
   },
   {
     category: "Education",
     school: "The Weber School",
-    program: "High School Coursework",
+    program: "Honors Diploma in STEM",
     period: "2019 - 2023",
     location: "Sandy Springs, Georgia",
     details:
-      "Completed AP Computer Science A, AP Calculus BC, and multivariable calculus, plus advanced cybersecurity/networking coursework while building practical software and infrastructure projects. Also earned National Honor Society membership, AP Scholar with Distinction, and an honors diploma distinction for dedication to Science, Technology, Engineering, and Design.",
-  },
-  {
-    category: "Experience",
-    school: "In The City Camps",
-    program: "Woodworking Specialist -> Technology Lead",
-    period: "Summers 2023-2025",
-    details:
-      "Started as a woodworking specialist and was promoted to manage camp technology operations, including A/V systems, digital records, staff badge production, vendor communication, and cost reductions.",
-  },
-  {
-    category: "Experience",
-    school: "Interfaith Nonprofit Website Project",
-    program: "Web and SEO Contractor",
-    period: "2021",
-    details:
-      "Contracted to reorganize the nonprofit website, improve search visibility, and modernize key operational workflows across hosting and communications tools.",
+      "AP Scholar with Distinction and National Honor Society. Completed AP Computer Science A (5), AP Calculus BC, Multivariable Calculus, Cybersecurity, and Networking coursework.",
   },
 ];
 

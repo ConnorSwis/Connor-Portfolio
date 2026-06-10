@@ -19,8 +19,8 @@ export function RetroSidebar({
       </RouteLink>
 
       <p className="retro-blurb">
-        Full-stack engineer building data pipelines, automation, and self-hosted
-        systems from Atlanta.
+        Building data pipelines, automation, and self-hosted systems. Based in
+        Atlanta.
       </p>
 
       {isHome && (
@@ -61,11 +61,7 @@ export function RetroSidebar({
       <div className="webring-shell">
         <p>Contact</p>
         <div className="webring-links">
-          <a
-            href="mailto:connorswislow@gmail.com"
-          >
-            Email
-          </a>
+          <a href="mailto:connorswislow@gmail.com">Email</a>
           <a
             href="https://github.com/ConnorSwis"
             rel="noreferrer noopener"

@@ -69,7 +69,7 @@ export type GuestbookEntry = {
   note: string;
 };
 
-export type SkillJourney = {
+export type Timeline = {
   skill: string;
   learnedBy: string;
 };
@@ -78,5 +78,5 @@ export type TimelineEntry = {
   period: string;
   title: string;
   context: string;
-  skillJourney: SkillJourney[];
+  timeline: Timeline[];
 };

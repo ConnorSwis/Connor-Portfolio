@@ -6,7 +6,7 @@ import { SectionFallback } from "../components/SectionFallback";
 import {
   education,
   guestbookEntries,
-  journeyTimeline,
+  timeline,
   projects,
   // skillGroups,
 } from "../server/portfolioData";
@@ -121,7 +121,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
     const normalizedMessage = guestMessage.trim();
 
     if (!normalizedHandle || !normalizedMessage) {
-      setGuestbookStatus("Enter both a name and a message.");
+      setGuestbookStatus("Need both a name and a message.");
       return;
     }
 
@@ -142,9 +142,9 @@ export function HomePage({ visitorCount }: HomePageProps) {
           JSON.stringify(nextEntries),
         );
       }
-      setGuestbookStatus("Saved locally on this browser.");
+      setGuestbookStatus("Got it. Saved to this browser.");
     } catch {
-      setGuestbookStatus("Message added, but local storage is unavailable.");
+      setGuestbookStatus("Saved, but local storage isn't available.");
     }
   };
 
@@ -168,10 +168,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
         <section className="retro-card hero-card" id="top">
           <h1>Connor's Cyber Portfolio Terminal</h1>
           <p className="blink-text">THIS SITE IS ALWAYS UNDER CONSTRUCTION</p>
-          <p>
-            Full-stack engineer building data pipelines, automation tools, and
-            self-hosted systems.
-          </p>
+          <p>I build data pipelines, automation, and self-hosted systems.</p>
 
           <div className="hero-grid">
             <div className="portrait-shell">
@@ -236,18 +233,18 @@ export function HomePage({ visitorCount }: HomePageProps) {
             className="retro-card timeline-card"
             id="timeline"
             message="The timeline section failed to load."
-            title="Journey Timeline"
+            title="Timeline"
           />
         }
         name="HomeTimeline"
       >
         <section className="retro-card timeline-card" id="timeline">
-          <h2>Journey Timeline</h2>
+          <h2>Timeline</h2>
           <p className="section-note">
-            How I picked up each skill along the way.
+            Skills and how I actually learned them.
           </p>
           <ol className="timeline-list">
-            {journeyTimeline.map((entry) => (
+            {timeline.map((entry) => (
               <li
                 className="timeline-item"
                 key={`${entry.period}-${entry.title}`}
@@ -263,7 +260,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
                       Skills + how I learned them
                     </p>
                     <ul className="timeline-skill-list">
-                      {entry.skillJourney.map((skill) => (
+                      {entry.timeline.map((skill) => (
                         <li
                           key={`${entry.period}-${entry.title}-${skill.skill}`}
                           className="timeline-skill-item"
@@ -296,9 +293,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
       >
         <section className="retro-card" id="projects">
           <h2>Project Hangar</h2>
-          <p className="section-note">
-            Click a project to see the full breakdown.
-          </p>
+          <p className="section-note">Click any project to dig deeper.</p>
           <div className="retro-table-wrap">
             <table className="retro-data-table">
               <thead>
@@ -332,6 +327,38 @@ export function HomePage({ visitorCount }: HomePageProps) {
           </div>
         </section>
       </ErrorBoundary>
+      <ErrorBoundary
+        fallback={
+          <SectionFallback
+            className="retro-card"
+            id="education"
+            message="The education section failed to load."
+            title="Education + Experience"
+          />
+        }
+        name="HomeEducation"
+      >
+        <section className="retro-card" id="education">
+          <h2>Education</h2>
+          <div className="education-grid">
+            {education.map((entry) => (
+              <article
+                className="education-item"
+                key={`${entry.school}-${entry.program}`}
+              >
+                {/* <p className="education-tag">{entry.category}</p> */}
+                <h3>{entry.school}</h3>
+                <p className="education-period">{entry.period}</p>
+                {entry.location ? (
+                  <p className="education-location">{entry.location}</p>
+                ) : null}
+                <p className="education-program">{entry.program}</p>
+                <p>{entry.details}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </ErrorBoundary>
 
       <ErrorBoundary
         fallback={
@@ -347,7 +374,9 @@ export function HomePage({ visitorCount }: HomePageProps) {
         <section className="retro-card" id="guestbook">
           <div className="guestbook-shell">
             <h2>Guestbook</h2>
-            <p className="section-note">Local mode. Saved per browser.</p>
+            <p className="section-note">
+              Stored in your browser. Nothing sent anywhere.
+            </p>
             <ul className="guestbook-list">
               {guestbookList.map((entry, index) => (
                 <li key={`${entry.handle}-${entry.note}-${index}`}>
@@ -380,39 +409,6 @@ export function HomePage({ visitorCount }: HomePageProps) {
               <button type="submit">Sign Guestbook</button>
               <p className="section-note">{guestbookStatus}</p>
             </form>
-          </div>
-        </section>
-      </ErrorBoundary>
-
-      <ErrorBoundary
-        fallback={
-          <SectionFallback
-            className="retro-card"
-            id="education"
-            message="The education section failed to load."
-            title="Education + Experience"
-          />
-        }
-        name="HomeEducation"
-      >
-        <section className="retro-card" id="education">
-          <h2>Education + Experience</h2>
-          <div className="education-grid">
-            {education.map((entry) => (
-              <article
-                className="education-item"
-                key={`${entry.school}-${entry.program}`}
-              >
-                <p className="education-tag">{entry.category}</p>
-                <h3>{entry.school}</h3>
-                <p className="education-period">{entry.period}</p>
-                {entry.location ? (
-                  <p className="education-location">{entry.location}</p>
-                ) : null}
-                <p className="education-program">{entry.program}</p>
-                <p>{entry.details}</p>
-              </article>
-            ))}
           </div>
         </section>
       </ErrorBoundary>
