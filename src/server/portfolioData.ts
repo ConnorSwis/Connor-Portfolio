@@ -807,15 +807,15 @@ export const education: EducationEntry[] = [
 
 export const guestbookEntries: GuestbookEntry[] = [
   {
-    handle: "@packetwizard",
-    note: "Your automation stack rules. Keep shipping weird internet tools.",
+    handle: "@connorsmom",
+    note: "Proud of you, Connor! Keep up the great work!",
   },
   {
-    handle: "@data_hacker88",
-    note: "This page loaded in 56k mode and still looks incredible.",
+    handle: "@infowarrior23",
+    note: "I love Connor, he's super smart and handsome!",
   },
   {
-    handle: "@sysadmin_mom",
-    note: "Respect for running a full self-hosted media stack at home.",
+    handle: "@mikemikington",
+    note: "Connor's projects are always so impressive!",
   },
 ];
