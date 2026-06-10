@@ -333,7 +333,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
             className="retro-card"
             id="education"
             message="The education section failed to load."
-            title="Education + Experience"
+            title="Education"
           />
         }
         name="HomeEducation"

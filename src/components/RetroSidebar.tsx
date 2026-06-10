@@ -32,7 +32,7 @@ export function RetroSidebar({
             Projects
           </button>
           <button onClick={() => onJumpToSection?.("education")} type="button">
-            Education + Experience
+            Education
           </button>
         </div>
       )}
