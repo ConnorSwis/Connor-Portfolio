@@ -801,7 +801,7 @@ export const education: EducationEntry[] = [
     period: "2019 - 2023",
     location: "Sandy Springs, Georgia",
     details:
-      "AP Scholar with Distinction and National Honor Society. Completed AP Computer Science A (5), AP Calculus BC, Multivariable Calculus, Cybersecurity, and Networking coursework.",
+      "AP Scholar with Distinction and National Honor Society. Completed AP Computer Science A, AP Calculus BC, Multivariable Calculus, Cybersecurity, and Networking coursework.",
   },
 ];
 
