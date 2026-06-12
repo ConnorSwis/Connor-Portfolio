@@ -15,12 +15,11 @@ export function RetroSidebar({
   return (
     <aside className="retro-sidebar">
       <RouteLink className="retro-site-name" to="/">
-        Connor's HyperPage
+        Connor Swislow
       </RouteLink>
 
       <p className="retro-blurb">
-        Building data pipelines, automation, and self-hosted systems. Based in
-        Atlanta.
+        A small page with some of the projects I've worked on.
       </p>
 
       {isHome && (
@@ -50,6 +49,7 @@ export function RetroSidebar({
         />
         <img alt="Color wave divider" src="/retro/rainbow-divider.gif" />
         <img alt="New mail icon" src="/retro/new-mail.gif" />
+        <img alt="" src="/retro/made-in-america.gif" />
         <img alt="Spinning globe animation" src="/retro/globe-spin.gif" />
       </div>
 

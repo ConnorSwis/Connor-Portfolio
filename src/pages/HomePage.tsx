@@ -166,9 +166,12 @@ export function HomePage({ visitorCount }: HomePageProps) {
         name="HomeHero"
       >
         <section className="retro-card hero-card" id="top">
-          <h1>Connor's Cyber Portfolio Terminal</h1>
+          <h1>Connor's Portfolio</h1>
           <p className="blink-text">THIS SITE IS ALWAYS UNDER CONSTRUCTION</p>
-          <p>I build data pipelines, automation, and self-hosted systems.</p>
+          <p>
+            Welcome to my portfolio! Here you'll find information about my
+            background, projects, and interests.
+          </p>
 
           <div className="hero-grid">
             <div className="portrait-shell">
@@ -199,7 +202,7 @@ export function HomePage({ visitorCount }: HomePageProps) {
                 </tr>
                 <tr>
                   <th scope="row">Age</th>
-                  <td>{currentAge} (Born 09/24/2004)</td>
+                  <td>{currentAge}</td>
                 </tr>
                 <tr>
                   <th scope="row">School</th>
@@ -207,19 +210,11 @@ export function HomePage({ visitorCount }: HomePageProps) {
                 </tr>
                 <tr>
                   <th scope="row">Major</th>
-                  <td>Mathematics (Computer Science concentration)</td>
+                  <td>B.S. in Computer Science</td>
                 </tr>
                 <tr>
                   <th scope="row">Location</th>
                   <td>Atlanta, Georgia</td>
-                </tr>
-                <tr>
-                  <th scope="row">Current Focus</th>
-                  <td>Automation, data pipelines, and full-stack systems</td>
-                </tr>
-                <tr>
-                  <th scope="row">Availability</th>
-                  <td>Open to internships, research, and engineering roles</td>
                 </tr>
               </tbody>
             </table>
